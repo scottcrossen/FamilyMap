@@ -1,4 +1,4 @@
-package com.scottcrossen42.familymap.UI;
+package com.scottcrossen42.familymap.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
