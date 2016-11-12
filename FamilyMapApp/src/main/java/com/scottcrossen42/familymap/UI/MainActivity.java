@@ -7,16 +7,16 @@ import com.scottcrossen42.familymap.R;
 
 public class MainActivity extends AppCompatActivity {
     private LoginFragment loginFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = this.getSupportFragmentManager();
-        loginFragment = (LoginFragment) fm.findFragmentById(R.id.loginFrameLayout);
-        if (loginFragment == null) {
-            loginFragment = loginFragment.newInstance();
-            //fm.beginTransaction().add(R.id.loginLayout, loginFragment).commit();
-        }
+        startLoginFragment();
+    }
+    private void startLoginFragment() {
+        FragmentManager fm = this.getSupportFragmentManager();
+        LoginFragment login_fragment = LoginFragment.newInstance();
+        fm.beginTransaction().replace(R.id.mainFrameLayout, login_fragment).commit();
     }
 }

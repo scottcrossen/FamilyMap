@@ -52,7 +52,7 @@ public class HTTPRequest extends AsyncTask<Void, Void, String> {
             /*TODO: set the authorization token if necessary
             if (//something)
             {
-                connection.addRequestProperty("Authorization", server_info.getAuth());
+                connection.addRequestProperty("Authorization", ServerInfo.getAuth());
             }*/
 
             connection.connect();
