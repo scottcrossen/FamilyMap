@@ -78,3 +78,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
             startLoginFragment();
     }
 }
+//TODO: Follow the milestones: https://docs.google.com/document/d/1YV0494viqVvGq67R5rodwnS0HrFsH4T2zdi6pd_rHmA/edit
+//TODO: Here's the specs: https://students.cs.byu.edu/~cs240ta/fall2016/projects/family-map/FamilyMapSpecification.pdf
+//TODO: Here's the course website: https://students.cs.byu.edu/~cs240ta/fall2016/projects/
