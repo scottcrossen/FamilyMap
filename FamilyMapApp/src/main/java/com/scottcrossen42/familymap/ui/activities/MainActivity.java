@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.scottcrossen42.familymap.Constants;
 import com.scottcrossen42.familymap.R;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
+import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.ui.fragments.LoginFragment;
 import com.scottcrossen42.familymap.ui.fragments.MapFragment;
 
-public class MainActivity extends AppCompatActivity implements IFragmentCaller {
+public class MainActivity extends AppCompatActivity implements IFragmentCaller, ISyncCaller {
     private boolean menu_enabled = false;
     MenuItem menu_search;
     MenuItem menu_filter;
@@ -39,12 +43,17 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller {
     }
     @Override
     public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
-        if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") /*Model.getInstance().syncData(this)*/;
+        if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
         if(fragment.getClass()==MapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
     }
-
-
-
+    @Override
+    public void syncAction(Intent intent) {
+        if(intent.getAction() == "sync done") startMapFragment();
+        if(intent.getAction() == "http error") {
+            Log.e(Constants.TAG, "Unable to retrieve data. " + intent.getStringExtra("error"));
+            Toast.makeText(this, "ERROR: unable to retrieve data.", Toast.LENGTH_LONG).show();
+        }
+    }
     private void enableMenu() {
         menu_enabled = true;
         refreshMenu();

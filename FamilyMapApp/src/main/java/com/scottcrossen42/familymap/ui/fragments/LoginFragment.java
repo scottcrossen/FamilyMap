@@ -1,6 +1,5 @@
 package com.scottcrossen42.familymap.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
