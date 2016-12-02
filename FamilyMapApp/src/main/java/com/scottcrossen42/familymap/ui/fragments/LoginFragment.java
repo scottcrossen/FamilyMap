@@ -1,8 +1,10 @@
-package com.scottcrossen42.familymap.ui;
+package com.scottcrossen42.familymap.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,11 @@ import com.scottcrossen42.familymap.httpaccess.HTTPGetter;
 import com.scottcrossen42.familymap.httpaccess.HTTPPoster;
 import com.scottcrossen42.familymap.httpaccess.PostRequest;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
+import com.scottcrossen42.familymap.ui.activities.IFragmentCaller;
 
 import org.json.JSONObject;
 
-public class LoginFragment extends android.support.v4.app.Fragment implements HTTPPoster, HTTPGetter {
+public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
     private EditText nameEditText;
     private EditText passwordEditText;
     private EditText hostEditText;
@@ -29,6 +32,7 @@ public class LoginFragment extends android.support.v4.app.Fragment implements HT
     private Button login_button;
     private Context context;
     private ServerSession session;
+    private IFragmentCaller calling_object;
     public LoginFragment() {
         session = ServerSession.getInstance();
     }
@@ -38,6 +42,10 @@ public class LoginFragment extends android.support.v4.app.Fragment implements HT
         fragment.setArguments(args);
         return fragment;
     }
+    public void setParent(IFragmentCaller _calling_object){
+        calling_object=_calling_object;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -76,6 +84,11 @@ public class LoginFragment extends android.support.v4.app.Fragment implements HT
     public void HTTPError(Exception error) {
         Log.e(Constants.TAG, "Unable to login. " + error.getMessage());
         Toast.makeText(context, "ERROR: unable to login.", Toast.LENGTH_LONG).show();
+        if (calling_object != null) {
+            Intent intent = new Intent();
+            intent.setAction("login failed");
+            calling_object.fragmentAction(this, intent);
+        }
     }
     @Override
     public void txData(String result) {
@@ -97,14 +110,14 @@ public class LoginFragment extends android.support.v4.app.Fragment implements HT
         try {
             JSONObject json_obj = new JSONObject(result);
             Toast.makeText(context, "welcome " + json_obj.getString("firstName") + " " + json_obj.getString("lastName"), Toast.LENGTH_LONG).show();
-            /*if (parent_activity != null)
-            {
-                parent_activity.loginSuccessful();
-            }*/
+            if (calling_object != null) {
+                Intent intent = new Intent();
+                intent.setAction("fragment finished");
+                calling_object.fragmentAction(this, intent);
+            }
         } catch(org.json.JSONException e) {
             Log.e(Constants.TAG, "Corrupt data received: " + result);
             HTTPError(e);
         }
     }
-
 }
