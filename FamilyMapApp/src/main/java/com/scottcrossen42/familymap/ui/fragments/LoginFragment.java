@@ -23,6 +23,11 @@ import com.scottcrossen42.familymap.ui.activities.IFragmentCaller;
 
 import org.json.JSONObject;
 
+/**
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
+ */
 public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
     private EditText nameEditText;
     private EditText passwordEditText;

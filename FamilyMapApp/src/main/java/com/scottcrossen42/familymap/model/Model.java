@@ -2,12 +2,11 @@ package com.scottcrossen42.familymap.model;
 
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.scottcrossen42.familymap.Constants;
 import com.scottcrossen42.familymap.httpaccess.GetRequest;
 import com.scottcrossen42.familymap.httpaccess.HTTPGetter;
-import com.scottcrossen42.familymap.ui.activities.ISyncCaller;
+import com.scottcrossen42.familymap.ui.activities.ITaskCaller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,20 +21,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by slxn42 on 12/1/16.
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
  */
 public class Model implements HTTPGetter {
     private static Model instance = new Model();
     private Map<String, Person> people = new HashMap();
     private Map<String, Event> events = new HashMap();
     private Map<String, List<String>> person_events = new HashMap();
-    private ISyncCaller calling_object;
+    private ITaskCaller calling_object;
     private boolean persons_received;
-    
     public static Model getInstance() { return instance; }
-    public void addPerson(Person person) { people.put(person.getID(), person); }
-    
 
+
+
+    public void addPerson(Person person) { people.put(person.getID(), person); }
     public void addEvent(Event event) {
         String person_id = event.getPersonID();
         if (people.containsKey(person_id))
@@ -45,8 +46,12 @@ public class Model implements HTTPGetter {
             person_events.put(event.getPersonID(), new LinkedList<String>());
         person_events.get(event.getPersonID()).add(event.getID());
     }
+    public boolean isEvent(String id) { return events.containsKey(id); }
+    public Person getPerson(String id) { return people.get(id); }
+    public Event getEvent(String id) { return events.get(id); }
     public Collection<Person> getPeople() { return people.values(); }
     public Collection<Event> getEvents() { return events.values(); }
+    public Collection<Event> getFilteredPersonEvents(String person_id) { return Filter.getInstance().filterEvents(getPersonEvents(person_id)); }
     public Collection<Event> getPersonEvents(String person_id) {
         if (person_events.get(person_id) != null) {
             Set<Event> to_return = new TreeSet<>();
@@ -56,10 +61,6 @@ public class Model implements HTTPGetter {
         }
         else return null;
     }
-    public Collection<Event> getFilteredPersonEvents(String person_id) { return Filter.getInstance().filterEvents(getPersonEvents(person_id)); }
-    public Person getPerson(String id) { return people.get(id); }
-    public Event getEvent(String id) { return events.get(id); }
-    public boolean isEvent(String id) { return events.containsKey(id); }
     public Event getFilteredEarliestEvent(String person_id) {
         Collection<Event> person_events = getFilteredPersonEvents(person_id);
         return getEarliestEvent(person_events);
@@ -81,19 +82,27 @@ public class Model implements HTTPGetter {
         String spouse_id = people.get(person_id).getSpouse();
         return getFilteredEarliestEvent(spouse_id);
     }
+
+
+
+
     private void clear() {
         people = new HashMap();
         events = new HashMap();
         person_events = new HashMap();
         persons_received = false;
     }
-    public void syncData(ISyncCaller caller) {
+    public void syncData(ITaskCaller caller) {
         clear();
         calling_object = caller;
         persons_received = false;
         GetRequest persons = new GetRequest(this, "/person/");
         persons.execute();
     }
+
+
+
+
     private void importDataPiece(JSONObject to_import) throws org.json.JSONException {
         if (to_import.has("eventID")) importEvent(to_import);
         else importPerson(to_import);
@@ -153,7 +162,7 @@ public class Model implements HTTPGetter {
         if (calling_object != null) {
             Intent intent = new Intent();
             intent.setAction("http error");
-            intent.putExtra("error",error.getMessage());
+            intent.putExtra("error", error.getMessage());
             calling_object.syncAction(intent);
         }
     }

@@ -8,6 +8,6 @@ import android.support.v4.app.Fragment;
  * @link http://scottcrossen42.com
  * Created on 12/1/16.
  */
-public interface ISyncCaller {
+public interface ITaskCaller {
     public abstract void syncAction(Intent intent);
 }

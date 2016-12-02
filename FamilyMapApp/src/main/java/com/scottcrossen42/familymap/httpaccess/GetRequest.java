@@ -8,7 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by slxn42 on 11/11/16.
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
  */
 public class GetRequest extends AsyncTask<Void, Void, String> {
     //TODO: Understand this class

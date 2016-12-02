@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by Scott Leland Crossen
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
  */
 public interface IFragmentCaller {
     public abstract void fragmentAction(Fragment fragment, Intent fragmentIntent);

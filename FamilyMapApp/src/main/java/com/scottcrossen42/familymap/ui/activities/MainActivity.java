@@ -1,6 +1,5 @@
 package com.scottcrossen42.familymap.ui.activities;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +15,12 @@ import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.ui.fragments.LoginFragment;
 import com.scottcrossen42.familymap.ui.fragments.MapFragment;
 
-public class MainActivity extends AppCompatActivity implements IFragmentCaller, ISyncCaller {
+/**
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
+ */
+public class MainActivity extends AppCompatActivity implements IFragmentCaller, ITaskCaller {
     private boolean menu_enabled = false;
     MenuItem menu_search;
     MenuItem menu_filter;

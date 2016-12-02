@@ -6,7 +6,9 @@ import android.os.Bundle;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
 
 /**
- * Created by slxn42 on 12/1/16.
+ * @author Scott Leland Crossen
+ * @link http://scottcrossen42.com
+ * Created on 12/1/16.
  */
 public class MapFragment extends Fragment {
     private ServerSession session;
