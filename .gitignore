@@ -38,3 +38,6 @@ captures/
 
 # Keystore files
 *.jks
+
+# Google Maps
+*/debug/res/values/google_maps_api.xml
