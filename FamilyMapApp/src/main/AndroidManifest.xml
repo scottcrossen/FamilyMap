@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activities.FilterActivity"></activity>
+        <activity android:name=".ui.activities.MapActivity"></activity>
+        <activity android:name=".ui.activities.PersonActivity"></activity>
+        <activity android:name=".ui.activities.SearchActivity"></activity>
+        <activity android:name=".ui.activities.SettingsActivity"></activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data

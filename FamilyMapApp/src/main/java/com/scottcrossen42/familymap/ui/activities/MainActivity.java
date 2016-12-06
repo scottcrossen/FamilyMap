@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.scottcrossen42.familymap.Constants;
 import com.scottcrossen42.familymap.R;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
 import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.ui.fragments.LoginFragment;
-import com.scottcrossen42.familymap.ui.fragments.MapFragment;
+import com.scottcrossen42.familymap.ui.fragments.FamilyMapFragment;
 
 /**
  * @author Scott Leland Crossen
@@ -32,6 +35,71 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         FragmentManager fm = this.getSupportFragmentManager();
         startLoginFragment();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        menu_search = menu.findItem(R.id.main_menu_search).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_search).colorRes(R.color.MenuIcons).sizeDp(20));
+        menu_filter = menu.findItem(R.id.main_menu_filter).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_filter).colorRes(R.color.MenuIcons).sizeDp(20));
+        menu_settings = menu.findItem(R.id.main_menu_settings).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_gear).colorRes(R.color.MenuIcons).sizeDp(20));
+
+        refreshMenu();
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.main_menu_search:
+                startSearchActivity();
+                return true;
+            case R.id.main_menu_filter:
+                startFilterActivity();
+                return true;
+            case R.id.main_menu_settings:
+                startSettingsActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
+        if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
+        if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
+    }
+    @Override
+    public void syncAction(Intent intent) {
+        if(intent.getAction() == "sync done") startMapFragment();
+        if(intent.getAction() == "http error") {
+            Log.e(Constants.TAG, "Unable to retrieve data. " + intent.getStringExtra("error"));
+            Toast.makeText(this, "ERROR: unable to retrieve data.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void startSearchActivity()
+    {
+        Intent i = new Intent(this, SearchActivity.class);
+        startActivity(i);
+    }
+
+    private void startFilterActivity()
+    {
+        Intent i = new Intent(this, FilterActivity.class);
+        startActivity(i);
+    }
+
+    private void startSettingsActivity()
+    {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
     private void startLoginFragment() {
         disableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
@@ -42,21 +110,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
     private void startMapFragment() {
         enableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
-        MapFragment map_fragment = MapFragment.newInstance();
+        FamilyMapFragment map_fragment = FamilyMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.mainFrameLayout, map_fragment).commit();
-    }
-    @Override
-    public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
-        if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
-        if(fragment.getClass()==MapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
-    }
-    @Override
-    public void syncAction(Intent intent) {
-        if(intent.getAction() == "sync done") startMapFragment();
-        if(intent.getAction() == "http error") {
-            Log.e(Constants.TAG, "Unable to retrieve data. " + intent.getStringExtra("error"));
-            Toast.makeText(this, "ERROR: unable to retrieve data.", Toast.LENGTH_LONG).show();
-        }
     }
     private void enableMenu() {
         menu_enabled = true;

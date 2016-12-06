@@ -7,11 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.scottcrossen42.familymap.ui.Activities.FilterActivity">
+    tools:context="com.scottcrossen42.familymap.ui.Activities.MapActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/filterRecycler"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/familyMapFrameLayout">
+    </FrameLayout>
 
 </RelativeLayout>

@@ -26,7 +26,6 @@ public class Filter {
     boolean father_checked = true;
     boolean mother_checked = true;
     private Map<String, Boolean> is_checked;
-
     public static Filter getInstance() { return ourInstance; }
     private Filter() { }
     public Collection<Event> filterEvents(Collection<Event> to_filter) {
@@ -78,8 +77,10 @@ public class Filter {
             if (event_person.getGender().equals("Female")) showFemales = true;
         }
         Person user_person = model.getPerson(user);
-        if (user_person.hasFather()) showFatherSide = true;
-        if (user_person.hasMother()) showMotherSide = true;
+        if(user_person !=null) {
+            if (user_person.hasFather()) showFatherSide = true;
+            if (user_person.hasMother()) showMotherSide = true;
+        }
     }
     public Set<String> getFilters()
     {
