@@ -15,6 +15,18 @@ import java.util.TreeMap;
 public class Filter {
     public enum Type {DESCRIPTION, MALE_GENDER, FEMALE_GENDER, FATHER_SIDE, MOTHER_SIDE}
     private static Filter ourInstance = new Filter();
+    private String user;
+    Model model = Model.getInstance();
+    private boolean showFatherSide = false;
+    private boolean showMotherSide = false;
+    private boolean showMales = false;
+    private boolean showFemales = false;
+    boolean male_checked = true;
+    boolean female_checked = true;
+    boolean father_checked = true;
+    boolean mother_checked = true;
+    private Map<String, Boolean> is_checked;
+
     public static Filter getInstance() { return ourInstance; }
     private Filter() { }
     public Collection<Event> filterEvents(Collection<Event> to_filter) {
@@ -29,16 +41,6 @@ public class Filter {
         }
         else return null;
     }
-    private String user;
-    public void setUser(String user)
-    {
-        this.user = user;
-    }
-    public String getUser()
-    {
-        return user;
-    }
-    Model model = Model.getInstance();
     private boolean filterEvent(Event event) {
         if (!is_checked.get(event.getDescription().toLowerCase())) return false;
         else if (!father_checked && isDescendant(model.getPerson(user).getFather(), event.getPersonID())) return false;
@@ -59,15 +61,6 @@ public class Filter {
         }
         else return false;
     }
-    private boolean showFatherSide = false;
-    private boolean showMotherSide = false;
-    private boolean showMales = false;
-    private boolean showFemales = false;
-    private Map<String, Boolean> is_checked;
-    public boolean showFatherSide() { return showFatherSide; }
-    public boolean showMotherSide() { return showMotherSide; }
-    public boolean showMales() { return showMales; }
-    public boolean showFemales() { return showFemales; }
     public void enumerateFilters() {
         Model model = Model.getInstance();
         Iterator<Event> index = model.getEvents().iterator();
@@ -92,10 +85,6 @@ public class Filter {
     {
         return is_checked.keySet();
     }
-    boolean male_checked = true;
-    boolean female_checked = true;
-    boolean father_checked = true;
-    boolean mother_checked = true;
     public boolean isChecked(Type parent, String description) {
         switch (parent) {
             case DESCRIPTION:
@@ -135,4 +124,16 @@ public class Filter {
                 assert(false);
         }
     }
+    public void setUser(String user)
+    {
+        this.user = user;
+    }
+    public String getUser()
+    {
+        return user;
+    }
+    public boolean showFatherSide() { return showFatherSide; }
+    public boolean showMotherSide() { return showMotherSide; }
+    public boolean showMales() { return showMales; }
+    public boolean showFemales() { return showFemales; }
 }
