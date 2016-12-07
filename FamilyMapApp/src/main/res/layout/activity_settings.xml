@@ -44,7 +44,7 @@
                 android:layout_weight="1" />
 
             <Spinner
-                android:layout_width="110dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:id="@+id/LifeStorySpinner" />
 
@@ -85,7 +85,7 @@
                 android:layout_weight="1" />
 
             <Spinner
-                android:layout_width="110dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:id="@+id/FamilyTreeSpinner" />
 
@@ -126,7 +126,7 @@
                 android:layout_weight="1" />
 
             <Spinner
-                android:layout_width="110dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:id="@+id/SpouseSpinner" />
 

@@ -14,7 +14,6 @@ import java.net.URL;
  * Created on 12/1/16.
  */
 public class PostRequest extends AsyncTask<Void, Void, String> {
-    //TODO: Understand this class
 
     private HTTPPoster who_called_me;
     private String post_data;

@@ -33,6 +33,8 @@ import com.scottcrossen42.familymap.model.Filter;
 import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.model.Person;
 import com.scottcrossen42.familymap.model.Settings;
+import com.scottcrossen42.familymap.ui.activities.IFragmentCaller;
+import com.scottcrossen42.familymap.ui.activities.MapActivity;
 import com.scottcrossen42.familymap.ui.activities.PersonActivity;
 
 import java.util.Collection;
@@ -48,13 +50,16 @@ import java.util.List;
  */
 public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
     private Context context;
-
+    private IFragmentCaller calling_object;
     private GoogleMap map;
     private SupportMapFragment map_fragment;
     private TextView title_text_view;
     private TextView details_text_view;
     private ImageView gender_image_view;
 
+    public void setParent(IFragmentCaller _calling_object){
+        calling_object=_calling_object;
+    }
     public FamilyMapFragment() {
         // Required empty public constructor
     }
@@ -212,7 +217,14 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         selected_event = event;
         if (map != null)
         {
-            selectEvent();
+            if (calling_object != null) {
+                Intent intent = new Intent();
+                intent.setAction("event selected");
+                intent.putExtra("target event id", event.getID());
+                calling_object.fragmentAction(this, intent);
+            }
+            else
+                selectEvent();
         }
     }
 

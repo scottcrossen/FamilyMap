@@ -25,11 +25,11 @@ import com.scottcrossen42.familymap.model.Settings;
 public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
     Settings settings = Settings.getInstance();
-    //TODO: Reduce appranent size
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Spinner spinner_story = (Spinner)findViewById(R.id.LifeStorySpinner);
         spinner_story.setAdapter(new ArrayAdapter<Settings.LineColor>(this, android.R.layout.simple_spinner_item, Settings.LineColor.values()));

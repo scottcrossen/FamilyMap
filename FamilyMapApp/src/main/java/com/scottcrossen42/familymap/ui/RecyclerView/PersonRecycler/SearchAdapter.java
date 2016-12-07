@@ -26,7 +26,7 @@ public class SearchAdapter extends RecyclerView.Adapter<ChildViewHolder> impleme
 
     @Override
     public ChildViewHolder onCreateViewHolder(ViewGroup viewGroup, int view_type) {
-        View view = mInflater.inflate(R.layout.person_child_element, viewGroup, false);
+        View view = mInflater.inflate(R.layout.person_child_element, viewGroup,false);
         return new ChildViewHolder(view, this);
     }
 

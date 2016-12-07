@@ -13,7 +13,6 @@ import java.net.URL;
  * Created on 12/1/16.
  */
 public class GetRequest extends AsyncTask<Void, Void, String> {
-    //TODO: Understand this class
     private HTTPGetter who_called_me;
     private String handle;
 

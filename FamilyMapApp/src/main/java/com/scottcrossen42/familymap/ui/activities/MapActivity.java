@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
@@ -35,6 +36,7 @@ public class MapActivity extends AppCompatActivity {
         fm.beginTransaction().replace(R.id.familyMapFrameLayout, familymap_fragment).commit();
 
         familymap_fragment.setSelectedEvent(selected_event);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -43,7 +45,6 @@ public class MapActivity extends AppCompatActivity {
 
         MenuItem menu_top = menu.findItem(R.id.map_menu_top).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_angle_double_up).colorRes(R.color.MenuIcons).sizeDp(20));
-
         return true;
     }
 

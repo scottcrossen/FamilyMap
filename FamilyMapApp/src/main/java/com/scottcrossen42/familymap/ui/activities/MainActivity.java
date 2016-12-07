@@ -74,7 +74,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
     @Override
     public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
         if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
-        //if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
+        if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "event selected") {
+            Intent i = new Intent(this, MapActivity.class);
+            i.putExtra(Constants.MAP_ACTIVITY_ARG_1, fragmentIntent.getStringExtra("target event id"));
+            startActivity(i);
+        }
     }
     @Override
     public void syncAction(Intent intent) {
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         enableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
         FamilyMapFragment map_fragment = FamilyMapFragment.newInstance();
+        map_fragment.setParent(this);
         fm.beginTransaction().replace(R.id.mainFrameLayout, map_fragment).commit();
     }
     private void enableMenu() {
@@ -141,3 +146,4 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
 //TODO: Follow the milestones: https://docs.google.com/document/d/1YV0494viqVvGq67R5rodwnS0HrFsH4T2zdi6pd_rHmA/edit
 //TODO: Here's the specs: https://students.cs.byu.edu/~cs240ta/fall2016/projects/family-map/FamilyMapSpecification.pdf
 //TODO: Here's the course website: https://students.cs.byu.edu/~cs240ta/fall2016/projects/
+//TODO: Add Back Buttons

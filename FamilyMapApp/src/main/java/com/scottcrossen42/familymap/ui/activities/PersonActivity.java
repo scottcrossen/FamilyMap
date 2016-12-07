@@ -68,6 +68,7 @@ public class PersonActivity extends AppCompatActivity implements IRecyclerActivi
         adapter.setParentAndIconExpandOnClick(true);
 
         list_view.setAdapter(adapter);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

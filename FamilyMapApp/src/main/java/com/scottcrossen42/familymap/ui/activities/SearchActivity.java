@@ -8,8 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
@@ -21,6 +24,7 @@ import com.scottcrossen42.familymap.model.Person;
 import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.Element;
 import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.EventElement;
 import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.PersonElement;
+import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.PersonExpandableAdapter;
 import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.SearchAdapter;
 
 import java.util.ArrayList;
@@ -30,12 +34,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements IRecyclerActivity {
-
+    private Button search_button;
     private Model model = Model.getInstance();
-    //TODO: Make Work
     private EditText search_input;
     private SearchAdapter adapter;
-    //TODO: Add Back Buttons
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RecyclerView list_view;
@@ -43,6 +45,13 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        search_button = (Button) findViewById(R.id.searchButton);
+        search_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newSearch();
+            }
+        });
         search_input = (EditText) findViewById(R.id.searchInput);
         search_input.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -65,6 +74,8 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         adapter = new SearchAdapter(this, this, generateElements());
 
         list_view.setAdapter(adapter);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void newSearch()
@@ -82,7 +93,6 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         ArrayList<Element> to_return = new ArrayList<>();
 
         String search_term = search_input.getText().toString();
-
         if (search_term.length() > 0)
         {
             Iterator<Person> person_index = searchPeople(search_term).iterator();
@@ -96,7 +106,6 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
                     to_return.add(new PersonElement(person.getFullName(), "", new IconDrawable(this, Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon), person.getID()));
                 }
             }
-
             Iterator<Event> event_index = searchEvents(search_term).iterator();
             while (event_index.hasNext()) {
                 Event current_event = event_index.next();
@@ -106,7 +115,6 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
                         current_event.getID()));
             }
         }
-
         return to_return;
     }
 
