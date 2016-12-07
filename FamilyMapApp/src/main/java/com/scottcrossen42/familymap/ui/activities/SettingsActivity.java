@@ -25,7 +25,7 @@ import com.scottcrossen42.familymap.model.Settings;
 public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
     Settings settings = Settings.getInstance();
-
+    //TODO: Reduce appranent size
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

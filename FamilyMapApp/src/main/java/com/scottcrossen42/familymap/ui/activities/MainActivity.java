@@ -33,7 +33,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = this.getSupportFragmentManager();
-        startLoginFragment();
+        LoginFragment login_fragment = (LoginFragment) fm.findFragmentById(R.id.mainFrameLayout);
+        if (login_fragment == null) {
+            startLoginFragment();
+        }
+        menu_enabled = false;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.main_menu_search:
                 startSearchActivity();
                 return true;
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
     @Override
     public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
         if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
-        if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
+        //if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "fragment finished") ;
     }
     @Override
     public void syncAction(Intent intent) {
@@ -129,8 +132,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
     @Override
     public void onResume() {
         super.onResume();
-        if (!ServerSession.getInstance().isLoggedOn())
+        if (!ServerSession.getInstance().isLoggedOn()) {
             startLoginFragment();
+        }
+        else startMapFragment();
     }
 }
 //TODO: Follow the milestones: https://docs.google.com/document/d/1YV0494viqVvGq67R5rodwnS0HrFsH4T2zdi6pd_rHmA/edit

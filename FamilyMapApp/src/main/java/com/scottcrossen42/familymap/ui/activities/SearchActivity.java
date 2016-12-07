@@ -32,10 +32,10 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity implements IRecyclerActivity {
 
     private Model model = Model.getInstance();
-
+    //TODO: Make Work
     private EditText search_input;
     private SearchAdapter adapter;
-
+    //TODO: Add Back Buttons
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RecyclerView list_view;

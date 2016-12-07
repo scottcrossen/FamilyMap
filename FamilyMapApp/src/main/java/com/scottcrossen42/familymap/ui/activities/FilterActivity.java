@@ -34,7 +34,7 @@ import java.util.TreeSet;
 public class FilterActivity extends AppCompatActivity {
 
     Filter filter = Filter.getInstance();
-
+    //TODO: Remove Caught a Toad Event. Add Mother/Father Event
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
