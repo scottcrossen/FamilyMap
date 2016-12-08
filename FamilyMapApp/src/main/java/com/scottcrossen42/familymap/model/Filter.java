@@ -29,7 +29,8 @@ public class Filter {
     boolean mother_checked = true;
     private Map<String, Boolean> is_checked;
     public static Filter getInstance() { return ourInstance; }
-    private Filter() {setUser(ServerSession.getInstance().getUserName());}
+    private Filter() {//setUser(ServerSession.getInstance().getUserName());
+    }
     public Collection<Event> filterEvents(Collection<Event> to_filter) {
         if (to_filter != null) {
             LinkedList<Event> to_return = new LinkedList<>();

@@ -19,6 +19,7 @@ import com.scottcrossen42.familymap.httpaccess.HTTPGetter;
 import com.scottcrossen42.familymap.httpaccess.HTTPPoster;
 import com.scottcrossen42.familymap.httpaccess.PostRequest;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
+import com.scottcrossen42.familymap.model.Filter;
 import com.scottcrossen42.familymap.ui.activities.IFragmentCaller;
 
 import org.json.JSONObject;
@@ -100,7 +101,7 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
             JSONObject json_obj = new JSONObject(result);
             String person_id = json_obj.getString("personId");
             session.setAuth(json_obj.getString("Authorization"));
-            //Filter.getInstance().setUser(person_id);
+            Filter.getInstance().setUser(person_id);
             GetRequest task = new GetRequest(this, "/person/" + person_id);
             task.execute();
         }

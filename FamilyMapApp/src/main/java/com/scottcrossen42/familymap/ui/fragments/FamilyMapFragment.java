@@ -217,7 +217,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         selected_event = event;
         if (map != null)
         {
-
+            /*
             Intent i = new Intent(getActivity(), MapActivity.class);
             i.putExtra(Constants.MAP_ACTIVITY_ARG_1, selected_event.getID());
             startActivity(i);
@@ -231,6 +231,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
             else
                 selectEvent();
             */
+            selectEvent();
         }
     }
 
