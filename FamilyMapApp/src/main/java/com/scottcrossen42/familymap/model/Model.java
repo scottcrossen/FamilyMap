@@ -34,8 +34,6 @@ public class Model implements HTTPGetter {
     private boolean persons_received;
     public static Model getInstance() { return instance; }
 
-
-
     public void addPerson(Person person) { people.put(person.getID(), person); }
     public void addEvent(Event event) {
         String person_id = event.getPersonID();

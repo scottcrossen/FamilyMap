@@ -74,7 +74,6 @@ public class FilterActivity extends AppCompatActivity {
             String description = index.next();
             to_return.add(new FilterElement(description, filter.isChecked(Filter.Type.DESCRIPTION, description), Filter.Type.DESCRIPTION));
         }
-
         if (filter.showFatherSide())
         {
             to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FATHER_SIDE, null), Filter.Type.FATHER_SIDE));

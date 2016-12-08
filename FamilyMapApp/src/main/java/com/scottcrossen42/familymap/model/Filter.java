@@ -1,5 +1,7 @@
 package com.scottcrossen42.familymap.model;
 
+import com.scottcrossen42.familymap.httpaccess.ServerSession;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -80,6 +82,14 @@ public class Filter {
         if(user_person !=null) {
             if (user_person.hasFather()) showFatherSide = true;
             if (user_person.hasMother()) showMotherSide = true;
+        }
+        else{
+            if (user==null)
+                user_person=new Person(ServerSession.getInstance().getUserName(),"","","trans");
+            else
+                user_person=new Person(user,"","","trans");
+            setUser(user_person.getID());
+            model.addPerson(user_person);
         }
     }
     public Set<String> getFilters()
