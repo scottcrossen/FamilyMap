@@ -11,8 +11,7 @@ public class FilterElement {
     private Filter.Type parent;
 
     public FilterElement(String description, boolean is_checked, Filter.Type parent) {
-        switch(parent)
-        {
+        switch(parent) {
             case DESCRIPTION:
                 text_upper = capitalizeWords(description) + " Events";
                 text_lower = "FILTER BY " + description.toUpperCase() + " EVENTS";
@@ -40,41 +39,18 @@ public class FilterElement {
         this.id = description;
     }
 
-    String capitalizeWords(String text)
-    {
-        for (int index = 0; index < text.length(); index++)
-        {
+    private String capitalizeWords(String text) {
+        for (int index = 0; index < text.length(); index++) {
             if (text.charAt(index) == ' ')
-            {
-                if (index + 1 < text.length())
-                {
-                    text = text.substring(0, index) + text.substring(index + 1, index + 2).toUpperCase() + text.substring(index + 2);
-                }
-            }
+                if (index + 1 < text.length()) text = text.substring(0, index) + text.substring(index + 1, index + 2).toUpperCase() + text.substring(index + 2);
             if (index == 0)
-            {
                 text = text.substring(index, index + 1).toUpperCase() + text.substring(index + 1);
-            }
         }
         return text;
     }
 
-    public String getTextUpper() {
-        return text_upper;
-    }
-
-    public String getTextLower() {
-        return text_lower;
-    }
-
-    public Filter.Type getParent()
-    {
-        return parent;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
-
+    public String getTextUpper() { return text_upper; }
+    public String getTextLower() { return text_lower; }
+    public Filter.Type getParent() { return parent; }
+    public String getId() { return id; }
 }

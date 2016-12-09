@@ -5,7 +5,9 @@ package com.scottcrossen42.familymap.httpaccess;
  * @link http://scottcrossen42.com
  * Created on 12/1/16.
  */
-public interface HTTPPoster {
-    public void txData(String result);
+public interface IHTTPGetter {
+
+    public void rxData(String data);
+
     public void HTTPError(Exception error);
 }

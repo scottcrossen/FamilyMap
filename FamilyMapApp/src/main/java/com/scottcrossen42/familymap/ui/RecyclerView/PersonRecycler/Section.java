@@ -9,33 +9,17 @@ public class Section implements ParentObject {
 
     private List<Object> children = new ArrayList<>();
 
-    public Section(String title)
-    {
+    private String title;
+
+    public Section(String title) {
         super();
         this.title = title;
     }
 
     @Override
-    public List<Object> getChildObjectList()
-    {
-        return children;
-    }
-
+    public List<Object> getChildObjectList() { return children; }
     @Override
-    public void setChildObjectList(List<Object> list)
-    {
-        children = list;
-    }
-
-    public void addChild(Object child)
-    {
-        children.add(child);
-    }
-
-    String title;
-
-    public String getTitle()
-    {
-        return title;
-    }
+    public void setChildObjectList(List<Object> list) { children = list; }
+    public void addChild(Object child) { children.add(child); }
+    public String getTitle() { return title; }
 }

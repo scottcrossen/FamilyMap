@@ -4,13 +4,9 @@ import com.joanzapata.android.iconify.IconDrawable;
 
 public class EventElement extends Element {
 
-    public EventElement(String text_upper, String text_lower, IconDrawable icon, String id)
-    {
+    public EventElement(String text_upper, String text_lower, IconDrawable icon, String id) {
         super(text_upper, text_lower, icon, id);
     }
 
-    public int getParent()
-    {
-        return 1;
-    }
+    public int getParent() { return 1;}
 }

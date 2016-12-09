@@ -24,13 +24,16 @@ import com.scottcrossen42.familymap.model.Settings;
 
 public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
-    Settings settings = Settings.getInstance();
+    private Settings settings = Settings.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Call the super 'constructor'
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        // Setup the spinners on the activity
+        // This is for the life-life color
         Spinner spinner_story = (Spinner)findViewById(R.id.LifeStorySpinner);
         spinner_story.setAdapter(new ArrayAdapter<Settings.LineColor>(this, android.R.layout.simple_spinner_item, Settings.LineColor.values()));
         spinner_story.setSelection(settings.getLifeLineColor().getIndex());
@@ -40,12 +43,11 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 Settings.LineColor color = (Settings.LineColor) parent.getItemAtPosition(pos);
                 settings.setLifeLineColor(color);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
+        // This is for the family tree spinner
         Spinner spinner_tree = (Spinner)findViewById(R.id.FamilyTreeSpinner);
         spinner_tree.setAdapter(new ArrayAdapter<Settings.LineColor>(this, android.R.layout.simple_spinner_item, Settings.LineColor.values()));
         spinner_tree.setSelection(settings.getFamilyTreeColor().getIndex());
@@ -55,12 +57,11 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 Settings.LineColor color = (Settings.LineColor) parent.getItemAtPosition(pos);
                 settings.setFamilyTreeColor(color);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-                
+        // This is for the spouse spinner
         Spinner spinner_spouse = (Spinner)findViewById(R.id.SpouseSpinner);
         spinner_spouse.setAdapter(new ArrayAdapter<Settings.LineColor>(this, android.R.layout.simple_spinner_item, Settings.LineColor.values()));
         spinner_spouse.setSelection(settings.getSpouseLineColor().getIndex());
@@ -75,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-                
+        // This is for the background spinner
         Spinner spinner_map = (Spinner)findViewById(R.id.BackgroundSpinner);
         spinner_map.setAdapter(new ArrayAdapter<Settings.MapBackground>(this, android.R.layout.simple_spinner_item, Settings.MapBackground.values()));
         spinner_map.setSelection(settings.getMapBackground().getIndex());
@@ -90,8 +91,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
-
+        // This is for the sync task
         LinearLayout sync_layout = (LinearLayout)findViewById(R.id.SyncRow);
         sync_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 onSyncClicked();
             }
         });
-
+        // This is for the logout task
         LinearLayout logout_layout = (LinearLayout)findViewById(R.id.LogoutRow);
         logout_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 onLogoutClicked();
             }
         });
-
+        // This is for the life-story switch
         Switch life_story_toggle = (Switch)findViewById(R.id.LifeStoryToggle);
         life_story_toggle.setChecked(settings.isLifeLineEnabled());
         life_story_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -116,7 +116,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 settings.setLifeLine(isChecked);
             }
         });
-
+        // This is for the family tree switch
         Switch family_tree_toggle = (Switch)findViewById(R.id.FamilyTreeToggle);
         family_tree_toggle.setChecked(settings.isFamilyTreeEnabled());
         family_tree_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -125,7 +125,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
                 settings.setFamilyTree(isChecked);
             }
         });
-
+        // This is for the spouse switch
         Switch spouse_toggle = (Switch)findViewById(R.id.SpouseToggle);
         spouse_toggle.setChecked(settings.isSpouseLineEnabled());
         spouse_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -138,8 +138,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -148,24 +147,17 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
         }
     }
 
-    private void onSyncClicked()
-    {
-        Model.getInstance().syncData(this);
-    }
-
-    private void onLogoutClicked()
-    {
+    private void onLogoutClicked() {
         ServerSession.getInstance().clearLogin();
-
         goToTop();
     }
 
-    private void goToTop()
-    {
+    private void goToTop() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
     @Override
     public void syncAction(Intent intent) {
         if(intent.getAction() == "sync done") {
@@ -177,4 +169,6 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
             Toast.makeText(this, "ERROR: unable to retrieve data.", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void onSyncClicked() { Model.getInstance().syncData(this); }
 }

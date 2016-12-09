@@ -9,5 +9,6 @@ import android.support.v4.app.Fragment;
  * Created on 12/1/16.
  */
 public interface ITaskCaller {
+
     public abstract void syncAction(Intent intent);
 }

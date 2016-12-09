@@ -12,17 +12,16 @@ import com.scottcrossen42.familymap.ui.activities.IRecyclerActivity;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<ChildViewHolder> implements FamilyMapAdapter {
+
     private LayoutInflater mInflater;
     private IRecyclerActivity activity;
     private List<Element> items;
 
-    public SearchAdapter(Context context, IRecyclerActivity activity, List<Element> objects)
-    {
+    public SearchAdapter(Context context, IRecyclerActivity activity, List<Element> objects) {
         this.activity = activity;
         mInflater = LayoutInflater.from(context);
         items = objects;
     }
-
 
     @Override
     public ChildViewHolder onCreateViewHolder(ViewGroup viewGroup, int view_type) {
@@ -39,20 +38,13 @@ public class SearchAdapter extends RecyclerView.Adapter<ChildViewHolder> impleme
         childViewHolder.setCallBack(child.getParent(), child.getId());
     }
 
-    @Override
-    public int getItemCount()
-    {
-        return items.size();
-    }
-
-    public void elementClicked(int parent_index, String id)
-    {
-        activity.onElementClicked(parent_index, id);
-    }
-
-    public void swap(List<Element> new_data)
-    {
+    public void swap(List<Element> new_data) {
         items = new_data;
         notifyDataSetChanged();
     }
+
+    @Override
+    public int getItemCount() { return items.size(); }
+    public void elementClicked(int parent_index, String id) { activity.onElementClicked(parent_index, id); }
+
 }

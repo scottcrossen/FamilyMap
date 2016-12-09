@@ -16,8 +16,7 @@ public class FilterAdapter  extends RecyclerView.Adapter<FilterViewHolder> {
     private LayoutInflater mInflater;
     private List<FilterElement> items;
 
-    public FilterAdapter(Context context, List<FilterElement> objects)
-    {
+    public FilterAdapter(Context context, List<FilterElement> objects) {
         mInflater = LayoutInflater.from(context);
         items = objects;
     }
@@ -38,8 +37,5 @@ public class FilterAdapter  extends RecyclerView.Adapter<FilterViewHolder> {
     }
 
     @Override
-    public int getItemCount()
-    {
-        return items.size();
-    }
+    public int getItemCount() {return items.size();}
 }

@@ -49,6 +49,7 @@ import java.util.List;
  * Created on 12/1/16.
  */
 public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
+
     private Context context;
     private IFragmentCaller calling_object;
     private GoogleMap map;
@@ -56,13 +57,13 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
     private TextView title_text_view;
     private TextView details_text_view;
     private ImageView gender_image_view;
+    private Event selected_event;
+    Polyline spouse_line;
+    Polyline person_line;
+    List<Polyline> tree_lines;
 
-    public void setParent(IFragmentCaller _calling_object){
-        calling_object=_calling_object;
-    }
-    public FamilyMapFragment() {
-        // Required empty public constructor
-    }
+    public FamilyMapFragment() { /* Required empty public constructor*/ }
+
 
     public static FamilyMapFragment newInstance() {
         FamilyMapFragment fragment = new FamilyMapFragment();
@@ -70,45 +71,35 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_familymap, container, false);
-
+        // Setup the gui. These will find the containers
         title_text_view = (TextView) v.findViewById(R.id.textClickMarker);
         details_text_view = (TextView) v.findViewById(R.id.textDetails);
         gender_image_view = (ImageView) v.findViewById(R.id.genderImage);
-
+        // Set original image
         gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon).sizeDp(50));
-
+        // Set the layout for the details
         LinearLayout details_layout = (LinearLayout)v.findViewById(R.id.DetailsBar);
         details_layout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                onDetailsClicked();
-            }
+            public void onClick(View v) { onDetailsClicked(); }
         });
-
+        // Return the current view
         return v;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-
         if (selected_event != null && !Model.getInstance().isEvent(selected_event.getID()))
-        {
             selected_event = null;
-        }
-
         FragmentManager fm = getFragmentManager();
         map_fragment = (SupportMapFragment) fm.findFragmentById(R.id.mapFrameLayout);
         if (map_fragment == null || map == null) {
@@ -119,19 +110,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
             map_fragment.getMapAsync(this);
         }
         else
-        {
             setMarkers();
-        }
-    }
-
-    private void onDetailsClicked()
-    {
-        if (selected_event != null)
-        {
-            Intent i = new Intent(getActivity(), PersonActivity.class);
-            i.putExtra(Constants.PERSON_ACTIVITY_ARG_1, selected_event.getPersonID());
-            startActivity(i);
-        }
     }
 
     @Override
@@ -142,11 +121,8 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         map = googleMap;
-
         setMarkers();
-
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -156,17 +132,12 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void setMarkers()
-    {
+    private void setMarkers() {
         map.clear();
-
         Model model = Model.getInstance();
         Filter filter = Filter.getInstance();
-
         Collection<Event> events = filter.filterEvents(model.getEvents());
-
         Iterator<Event> events_index = events.iterator();
-
         while (events_index.hasNext()) {
             Event current_event = events_index.next();
             map.addMarker(new MarkerOptions()
@@ -174,19 +145,20 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
                     .position(current_event.getCoordinates())
                     .icon(markerColor(current_event.getDescription())));
         }
-
-        if (selected_event != null)
-        {
-            selectEvent();
-        }
-
+        if (selected_event != null) selectEvent();
         map.setMapType(Settings.getInstance().getMapBackground().getDisplayCode());
     }
 
-    private BitmapDescriptor markerColor(String event_description)
-    {
-        switch (event_description)
-        {
+    private void onDetailsClicked() {
+        if (selected_event != null) {
+            Intent i = new Intent(getActivity(), PersonActivity.class);
+            i.putExtra(Constants.PERSON_ACTIVITY_ARG_1, selected_event.getPersonID());
+            startActivity(i);
+        }
+    }
+
+    private BitmapDescriptor markerColor(String event_description) {
+        switch (event_description) {
             case "baptism":
                 return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
             case "birth":
@@ -204,19 +176,17 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void markerSelected(Marker marker)
-    {
+    private void markerSelected(Marker marker) {
         marker.hideInfoWindow();
         Model model = Model.getInstance();
         Event selected_event = model.getEvent(marker.getTitle());
         selectEvent(selected_event);
     }
 
-    public void setSelectedEvent(Event event)
-    {
+    public void setSelectedEvent(Event event) {
         selected_event = event;
-        if (map != null)
-        {
+        if (map != null) {
+        // Uncomment/Comment the following line if a new activity is suppose to be started when an event is clicked.
             /*
             Intent i = new Intent(getActivity(), MapActivity.class);
             i.putExtra(Constants.MAP_ACTIVITY_ARG_1, selected_event.getID());
@@ -235,53 +205,34 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private Event selected_event;
-
-    private void selectEvent(Event event)
-    {
-        setSelectedEvent(event);
-    }
-
-    private void selectEvent()
-    {
+    private void selectEvent() {
         map.moveCamera(CameraUpdateFactory.newLatLng(selected_event.getCoordinates()));
-
+        // Get the model class instance
         Model model = Model.getInstance();
         Person selected_person = model.getPerson(selected_event.getPersonID());
-
+        // Figure out what we're viewing then change the layout to that.
         title_text_view.setText(selected_event.getTitle());
         details_text_view.setText(selected_event.getDescription());
         if (selected_person.getGender().equals("Male"))
-        {
             gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_male).colorRes(R.color.MaleIcon).sizeDp(50));
-        }
         else if (selected_person.getGender().equals("Female"))
-        {
             gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_female).colorRes(R.color.FemaleIcon).sizeDp(50));
-        }
         else
-        {
             gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon).sizeDp(50));
-        }
-
-
         addSpouseLine(selected_event);
         addPersonLine(selected_event);
         addTreeLines(selected_event);
     }
 
-    private void addSpouseLine(Event selected_event)
-    {
+    private void addSpouseLine(Event selected_event) {
         //remove old spouse line
-        if (spouse_line != null)
-        {
+        if (spouse_line != null) {
             spouse_line.remove();
             spouse_line = null;
         }
         //add spouse line
         Settings settings = Settings.getInstance();
-        if (settings.isSpouseLineEnabled())
-        {
+        if (settings.isSpouseLineEnabled()) {
             Event spouse_event = Model.getInstance().getSpouseEvent(selected_event.getPersonID());
             if (spouse_event != null) {
                 spouse_line = map.addPolyline(new PolylineOptions()
@@ -291,96 +242,75 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-    Polyline spouse_line;
 
-    private void addPersonLine(Event selected_event)
-    {
+    private void addPersonLine(Event selected_event) {
         //remove old person line
-        if (person_line != null)
-        {
+        if (person_line != null) {
             person_line.remove();
             person_line = null;
         }
         //add person line
         Settings settings = Settings.getInstance();
-        if (settings.isLifeLineEnabled())
-        {
+        if (settings.isLifeLineEnabled()) {
             Collection person_events = Model.getInstance().getFilteredPersonEvents(selected_event.getPersonID());
             if (person_events.size() > 1) {
                 //create list of coordinates
                 List<LatLng> coords = new LinkedList<>();
                 Iterator<Event> index = person_events.iterator();
-                while (index.hasNext()) {
+                while (index.hasNext())
                     coords.add(index.next().getCoordinates());
-                }
                 person_line = map.addPolyline(new PolylineOptions()
                         .addAll(coords)
                         .width(Constants.MAP_LINE_SIZE)
                         .color(Settings.getInstance().getLifeLineColor().getColorCode()));
-            } else {
-                person_line = null;
             }
+            else person_line = null;
         }
     }
-    Polyline person_line;
 
-    private void addTreeLines(Event selected_event)
-    {
+    private void addTreeLines(Event selected_event) {
         //remove the old lines
-        if (tree_lines != null)
-        {
+        if (tree_lines != null) {
             Iterator<Polyline> index = tree_lines.iterator();
-
-            while(index.hasNext())
-            {
-                index.next().remove();
-            }
+            while(index.hasNext()) index.next().remove();
             tree_lines = null;
         }
         //add the new lines
         Settings settings = Settings.getInstance();
-        if (settings.isFamilyTreeEnabled())
-        {
+        if (settings.isFamilyTreeEnabled()) {
             tree_lines = new LinkedList<>();
-
             addTreeLinesHelper(selected_event, Constants.MAP_LINE_SIZE);
         }
     }
-    List<Polyline> tree_lines;
 
-    private void addTreeLinesHelper(Event current_event, int width)
-    {
-        if (width > 0)
-        {
+    private void addTreeLinesHelper(Event current_event, int width) {
+        if (width > 0) {
             Settings settings = Settings.getInstance();
             Model model = Model.getInstance();
             Person child = model.getPerson(current_event.getPersonID());
-
             if (child.hasFather()) {
                 Event father_event = model.getFilteredEarliestEvent(child.getFather());
-                if (father_event != null)
-                {
+                if (father_event != null) {
                     tree_lines.add(map.addPolyline(new PolylineOptions()
                             .add(current_event.getCoordinates(), father_event.getCoordinates())
                             .width(width)
                             .color(settings.getFamilyTreeColor().getColorCode())));
-
                     addTreeLinesHelper(father_event, width - 1);
                 }
             }
-
             if (child.hasMother()) {
                 Event mother_event = model.getFilteredEarliestEvent(child.getMother());
-                if (mother_event != null)
-                {
+                if (mother_event != null) {
                     tree_lines.add(map.addPolyline(new PolylineOptions()
                             .add(current_event.getCoordinates(), mother_event.getCoordinates())
                             .width(width)
                             .color(settings.getFamilyTreeColor().getColorCode())));
-
                     addTreeLinesHelper(mother_event, width - 3);
                 }
             }
         }
     }
+
+    private void selectEvent(Event event) { setSelectedEvent(event); }
+    public void setParent(IFragmentCaller _calling_object){ calling_object=_calling_object; }
 }

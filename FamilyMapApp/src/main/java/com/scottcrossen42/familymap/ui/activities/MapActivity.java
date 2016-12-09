@@ -19,22 +19,24 @@ import com.scottcrossen42.familymap.ui.fragments.FamilyMapFragment;
 public class MapActivity extends AppCompatActivity {
 
     Model model = Model.getInstance();
-
     Event selected_event;
+
+    private void goToTop() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         Intent i = getIntent();
         String event_id = i.getStringExtra(Constants.MAP_ACTIVITY_ARG_1);
         selected_event = model.getEvent(event_id);
-
         FragmentManager fm = this.getSupportFragmentManager();
         FamilyMapFragment familymap_fragment = FamilyMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.familyMapFrameLayout, familymap_fragment).commit();
-
         familymap_fragment.setSelectedEvent(selected_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -42,7 +44,6 @@ public class MapActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_map, menu);
-
         MenuItem menu_top = menu.findItem(R.id.map_menu_top).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_angle_double_up).colorRes(R.color.MenuIcons).sizeDp(20));
         return true;
@@ -50,8 +51,7 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.map_menu_top:
                 goToTop();
                 return true;
@@ -61,12 +61,5 @@ public class MapActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void goToTop()
-    {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 }

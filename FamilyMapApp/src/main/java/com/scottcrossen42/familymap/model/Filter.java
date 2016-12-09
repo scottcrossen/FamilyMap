@@ -15,6 +15,7 @@ import java.util.TreeMap;
  * Created on 12/1/16.
  */
 public class Filter {
+
     public enum Type {DESCRIPTION, MALE_GENDER, FEMALE_GENDER, FATHER_SIDE, MOTHER_SIDE}
     private static Filter ourInstance = new Filter();
     private String user;
@@ -28,9 +29,11 @@ public class Filter {
     boolean father_checked = true;
     boolean mother_checked = true;
     private Map<String, Boolean> is_checked;
+
+    private Filter() {/*setUser(ServerSession.getInstance().getUserName());*/}
+
     public static Filter getInstance() { return ourInstance; }
-    private Filter() {//setUser(ServerSession.getInstance().getUserName());
-    }
+
     public Collection<Event> filterEvents(Collection<Event> to_filter) {
         if (to_filter != null) {
             LinkedList<Event> to_return = new LinkedList<>();
@@ -43,26 +46,7 @@ public class Filter {
         }
         else return null;
     }
-    private boolean filterEvent(Event event) {
-        if (!is_checked.get(event.getDescription().toLowerCase())) return false;
-        else if (!father_checked && isDescendant(model.getPerson(user).getFather(), event.getPersonID())) return false;
-        else if (!mother_checked && isDescendant(model.getPerson(user).getMother(), event.getPersonID())) return false;
-        else if (!male_checked && model.getPerson(event.getPersonID()).getGender().equals("Male")) return false;
-        else if (!female_checked && model.getPerson(event.getPersonID()).getGender().equals("Female")) return false;
-        else return true;
-    }
 
-    private boolean isDescendant(String current, String to_find) {
-        if (current != null) {
-            if (current.equals(to_find)) return true;
-            else {
-                if (isDescendant(model.getPerson(current).getFather(), to_find)) return true;
-                else if (isDescendant(model.getPerson(current).getMother(), to_find)) return true;
-                else return false;
-            }
-        }
-        else return false;
-    }
     public void enumerateFilters() {
         Model model = Model.getInstance();
         Iterator<Event> index = model.getEvents().iterator();
@@ -93,10 +77,28 @@ public class Filter {
             model.addPerson(user_person);
         }
     }
-    public Set<String> getFilters()
-    {
-        return is_checked.keySet();
+
+    private boolean filterEvent(Event event) {
+        if (!is_checked.get(event.getDescription().toLowerCase())) return false;
+        else if (!father_checked && isDescendant(model.getPerson(user).getFather(), event.getPersonID())) return false;
+        else if (!mother_checked && isDescendant(model.getPerson(user).getMother(), event.getPersonID())) return false;
+        else if (!male_checked && model.getPerson(event.getPersonID()).getGender().equals("Male")) return false;
+        else if (!female_checked && model.getPerson(event.getPersonID()).getGender().equals("Female")) return false;
+        else return true;
     }
+
+    private boolean isDescendant(String current, String to_find) {
+        if (current != null) {
+            if (current.equals(to_find)) return true;
+            else {
+                if (isDescendant(model.getPerson(current).getFather(), to_find)) return true;
+                else if (isDescendant(model.getPerson(current).getMother(), to_find)) return true;
+                else return false;
+            }
+        }
+        else return false;
+    }
+
     public boolean isChecked(Type parent, String description) {
         switch (parent) {
             case DESCRIPTION:
@@ -114,6 +116,7 @@ public class Filter {
                 return false;
         }
     }
+
     public void setChecked(Type parent, String id, boolean checked) {
         switch (parent) {
             case DESCRIPTION:
@@ -136,14 +139,10 @@ public class Filter {
                 assert(false);
         }
     }
-    public void setUser(String user)
-    {
-        this.user = user;
-    }
-    public String getUser()
-    {
-        return user;
-    }
+
+    public void setUser(String user) { this.user = user; }
+    public String getUser() { return user; }
+    public Set<String> getFilters() { return is_checked.keySet(); }
     public boolean showFatherSide() { return showFatherSide; }
     public boolean showMotherSide() { return showMotherSide; }
     public boolean showMales() { return showMales; }

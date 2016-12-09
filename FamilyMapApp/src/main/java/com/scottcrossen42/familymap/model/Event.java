@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
  * Created on 12/1/16.
  */
 public class Event implements Comparable {
+
     private String id;
     private String person_id;
     private String person_name = "Unnamed";
@@ -16,6 +17,7 @@ public class Event implements Comparable {
     private String city;
     private String description;
     private int year;
+
     public Event(String eventID, String personID, double latitude, double longitude, String country, String city, String description, int year) {
         this.id = eventID;
         this.person_id = personID;
@@ -25,15 +27,7 @@ public class Event implements Comparable {
         this.description = description;
         this.year = year;
     }
-    public void setPersonName(String name) { person_name = name; }
-    public String getID() { return id; }
-    public String getPersonID() { return person_id; }
-    public String getTitle() { return person_name; }
-    public int getYear() { return year; }
-    public String getDescription() { return description; }
-    public LatLng getCoordinates() { return coordinates; }
-    public String getCountry() { return country; }
-    public String getCity() { return city; }
+
     @Override
     public int compareTo(Object another) {
         if (another.getClass() != getClass()) return -2;
@@ -51,6 +45,15 @@ public class Event implements Comparable {
                 }
             }
         }
-
     }
+
+    public void setPersonName(String name) { person_name = name; }
+    public String getID() { return id; }
+    public String getPersonID() { return person_id; }
+    public String getTitle() { return person_name; }
+    public int getYear() { return year; }
+    public String getDescription() { return description; }
+    public LatLng getCoordinates() { return coordinates; }
+    public String getCountry() { return country; }
+    public String getCity() { return city; }
 }

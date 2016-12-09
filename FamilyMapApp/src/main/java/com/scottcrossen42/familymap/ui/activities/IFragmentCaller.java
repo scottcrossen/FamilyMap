@@ -10,5 +10,6 @@ import android.support.v4.app.Fragment;
  * Created on 12/1/16.
  */
 public interface IFragmentCaller {
+
     public abstract void fragmentAction(Fragment fragment, Intent fragmentIntent);
 }

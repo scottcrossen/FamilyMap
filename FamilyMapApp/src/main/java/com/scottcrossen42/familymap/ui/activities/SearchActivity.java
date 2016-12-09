@@ -34,17 +34,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements IRecyclerActivity {
+
     private Button search_button;
     private Model model = Model.getInstance();
     private EditText search_input;
     private SearchAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RecyclerView list_view;
-
+        // Call the Super Method
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        // Set-up the layout
         search_button = (Button) findViewById(R.id.searchButton);
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,46 +67,31 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
                 return false;
             }
         });
-
+        // Set-up the display part.
         list_view = (RecyclerView) findViewById(R.id.searchRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         list_view.setLayoutManager(manager);
-
+        // Set up the recycler
         adapter = new SearchAdapter(this, this, generateElements());
-
+        // Misc Setup
         list_view.setAdapter(adapter);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void newSearch()
-    {
-        /*PersonExpandableAdapter adapter = new PersonExpandableAdapter(this, this, generateElements());
-        adapter.setCustomParentAnimationViewId(R.id.parent_list_item_expand_arrow);
-        adapter.setParentClickableViewAnimationDefaultDuration();
-        adapter.setParentAndIconExpandOnClick(true);
-        list_view.swapAdapter(adapter, true);*/
-        adapter.swap(generateElements());
-    }
-
-    private ArrayList<Element> generateElements()
-    {
+    private ArrayList<Element> generateElements() {
         ArrayList<Element> to_return = new ArrayList<>();
-
         String search_term = search_input.getText().toString();
-        if (search_term.length() > 0)
-        {
+        if (search_term.length() > 0) {
             Iterator<Person> person_index = searchPeople(search_term).iterator();
             while (person_index.hasNext()) {
                 Person person = person_index.next();
-                if (person.getGender().equals("Male")) {
+                if (person.getGender().equals("Male"))
                     to_return.add(new PersonElement(person.getFullName(), "", new IconDrawable(this, Iconify.IconValue.fa_male).colorRes(R.color.MaleIcon), person.getID()));
-                } else if (person.getGender().equals("Female")) {
+                else if (person.getGender().equals("Female"))
                     to_return.add(new PersonElement(person.getFullName(), "", new IconDrawable(this, Iconify.IconValue.fa_female).colorRes(R.color.FemaleIcon), person.getID()));
-                } else {
+                else
                     to_return.add(new PersonElement(person.getFullName(), "", new IconDrawable(this, Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon), person.getID()));
-                }
             }
             Iterator<Event> event_index = searchEvents(search_term).iterator();
             while (event_index.hasNext()) {
@@ -118,48 +105,44 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         return to_return;
     }
 
-    private Collection<Event> searchEvents(String search_term)
-    {
+    private Collection<Person> searchPeople(String search_term) {
         Model model = Model.getInstance();
-        List<Event> to_return = new LinkedList<>();
-
-        Iterator<Event> index = model.getEvents().iterator();
-
-        while(index.hasNext())
-        {
-            Event current_event = index.next();
-            if (searchEvent(current_event, search_term))
-            {
-                to_return.add(current_event);
-            }
+        List<Person> to_return = new LinkedList<>();
+        Iterator<Person> index = model.getPeople().iterator();
+        while(index.hasNext()) {
+            Person current_person = index.next();
+            if (searchPerson(current_person, search_term))
+                to_return.add(current_person);
         }
-
         return to_return;
     }
 
-    private Collection<Person> searchPeople(String search_term)
-    {
+    private Collection<Event> searchEvents(String search_term) {
         Model model = Model.getInstance();
-        List<Person> to_return = new LinkedList<>();
-
-        Iterator<Person> index = model.getPeople().iterator();
-
-        while(index.hasNext())
-        {
-            Person current_person = index.next();
-            if (searchPerson(current_person, search_term))
-            {
-                to_return.add(current_person);
-            }
+        List<Event> to_return = new LinkedList<>();
+        Iterator<Event> index = model.getEvents().iterator();
+        while(index.hasNext()) {
+            Event current_event = index.next();
+            if (searchEvent(current_event, search_term)) to_return.add(current_event);
         }
-
         return to_return;
+    }
+
+    private boolean searchPerson(Person person, String search_term) {
+        return (person.getFullName().indexOf(search_term) >= 0);
+    }
+
+    private boolean searchEvent(Event event, String search_term) {
+        if (event.getCountry().indexOf(search_term) >= 0) return true;
+        else if (event.getCity().indexOf(search_term) >= 0) return true;
+        else if (event.getDescription().indexOf(search_term) >= 0) return true;
+        else if (Integer.toString(event.getYear()).indexOf(search_term) >= 0) return true;
+        else return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -168,52 +151,21 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         }
     }
 
-    private boolean searchPerson(Person person, String search_term)
-    {
-        return (person.getFullName().indexOf(search_term) >= 0);
-    }
-
-    private boolean searchEvent(Event event, String search_term)
-    {
-        if (event.getCountry().indexOf(search_term) >= 0)
-        {
-            return true;
-        }
-        else if (event.getCity().indexOf(search_term) >= 0)
-        {
-            return true;
-        }
-        else if (event.getDescription().indexOf(search_term) >= 0)
-        {
-            return true;
-        }
-        else if (Integer.toString(event.getYear()).indexOf(search_term) >= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     @Override
     public void onElementClicked(int parent_index, String child_id) {
-        if (parent_index == 2)
-        {
+        if (parent_index == 2) {
             Intent i = new Intent(this, PersonActivity.class);
             i.putExtra(Constants.PERSON_ACTIVITY_ARG_1, child_id);
             startActivity(i);
         }
-        else if (parent_index == 1)
-        {
+        else if (parent_index == 1) {
             Intent i = new Intent(this, MapActivity.class);
             i.putExtra(Constants.MAP_ACTIVITY_ARG_1, child_id);
             startActivity(i);
         }
         else
-        {
             Log.e(Constants.TAG, "Invalid element selection ");
-        }
     }
+
+    private void newSearch() { adapter.swap(generateElements()); }
 }

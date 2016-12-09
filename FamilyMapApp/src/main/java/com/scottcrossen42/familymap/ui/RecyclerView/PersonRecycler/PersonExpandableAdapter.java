@@ -17,8 +17,7 @@ public class PersonExpandableAdapter extends ExpandableRecyclerAdapter<ParentVie
     private LayoutInflater mInflater;
     private IRecyclerActivity activity;
 
-    public PersonExpandableAdapter(Context context, IRecyclerActivity activity, List<ParentObject> objects)
-    {
+    public PersonExpandableAdapter(Context context, IRecyclerActivity activity, List<ParentObject> objects) {
         super(context, objects);
         this.activity = activity;
         mInflater = LayoutInflater.from(context);
@@ -51,8 +50,7 @@ public class PersonExpandableAdapter extends ExpandableRecyclerAdapter<ParentVie
         childViewHolder.setCallBack(child.getParent(), child.getId());
     }
 
-    public void elementClicked(int parent_index, String id)
-    {
+    public void elementClicked(int parent_index, String id) {
         activity.onElementClicked(parent_index, id);
     }
 }

@@ -34,26 +34,46 @@ import java.util.TreeSet;
 public class FilterActivity extends AppCompatActivity {
 
     Filter filter = Filter.getInstance();
+
+    private ArrayList<FilterElement> generateElements() {
+        ArrayList<FilterElement> to_return = new ArrayList<>();
+        Filter filter = Filter.getInstance();
+        Iterator<String> index = filter.getFilters().iterator();
+        while(index.hasNext()) {
+            String description = index.next();
+            to_return.add(new FilterElement(description, filter.isChecked(Filter.Type.DESCRIPTION, description), Filter.Type.DESCRIPTION));
+        }
+        if (filter.showFatherSide()) {
+            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FATHER_SIDE, null), Filter.Type.FATHER_SIDE));
+        }
+        if (filter.showMotherSide()) {
+            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MOTHER_SIDE, null), Filter.Type.MOTHER_SIDE));
+        }
+        if (filter.showMales()) {
+            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MALE_GENDER, null), Filter.Type.MALE_GENDER));
+        }
+        if (filter.showFemales()) {
+            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FEMALE_GENDER, null), Filter.Type.FEMALE_GENDER));
+        }
+        return to_return;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-
         RecyclerView list_view = (RecyclerView) findViewById(R.id.filterRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         list_view.setLayoutManager(manager);
-
         FilterAdapter adapter = new FilterAdapter(this, generateElements());
-
         list_view.setAdapter(adapter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -61,40 +81,4 @@ public class FilterActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private ArrayList<FilterElement> generateElements()
-    {
-        ArrayList<FilterElement> to_return = new ArrayList<>();
-
-        Filter filter = Filter.getInstance();
-        Iterator<String> index = filter.getFilters().iterator();
-
-        while(index.hasNext())
-        {
-            String description = index.next();
-            to_return.add(new FilterElement(description, filter.isChecked(Filter.Type.DESCRIPTION, description), Filter.Type.DESCRIPTION));
-        }
-        if (filter.showFatherSide())
-        {
-            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FATHER_SIDE, null), Filter.Type.FATHER_SIDE));
-        }
-
-        if (filter.showMotherSide())
-        {
-            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MOTHER_SIDE, null), Filter.Type.MOTHER_SIDE));
-        }
-
-        if (filter.showMales())
-        {
-            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MALE_GENDER, null), Filter.Type.MALE_GENDER));
-        }
-
-        if (filter.showFemales())
-        {
-            to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FEMALE_GENDER, null), Filter.Type.FEMALE_GENDER));
-        }
-
-        return to_return;
-    }
-
 }

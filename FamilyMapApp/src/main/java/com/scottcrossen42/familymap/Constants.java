@@ -12,4 +12,5 @@ public class Constants {
     public static final String PERSON_ACTIVITY_ARG_1 = "target person id";
 
     public static final String MAP_ACTIVITY_ARG_1 = "target event id";
+
 }

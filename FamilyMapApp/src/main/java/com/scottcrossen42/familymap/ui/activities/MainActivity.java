@@ -24,34 +24,32 @@ import com.scottcrossen42.familymap.ui.fragments.FamilyMapFragment;
  * Created on 12/1/16.
  */
 public class MainActivity extends AppCompatActivity implements IFragmentCaller, ITaskCaller {
+
     private boolean menu_enabled = false;
     MenuItem menu_search;
     MenuItem menu_filter;
     MenuItem menu_settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = this.getSupportFragmentManager();
         LoginFragment login_fragment = (LoginFragment) fm.findFragmentById(R.id.mainFrameLayout);
-        if (login_fragment == null) {
-            startLoginFragment();
-        }
+        if (login_fragment == null) startLoginFragment();
         menu_enabled = false;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         menu_search = menu.findItem(R.id.main_menu_search).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_search).colorRes(R.color.MenuIcons).sizeDp(20));
         menu_filter = menu.findItem(R.id.main_menu_filter).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_filter).colorRes(R.color.MenuIcons).sizeDp(20));
         menu_settings = menu.findItem(R.id.main_menu_settings).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_gear).colorRes(R.color.MenuIcons).sizeDp(20));
-
         refreshMenu();
-
         return true;
     }
 
@@ -71,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
         if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
             startActivity(i);
         }
     }
+
     @Override
     public void syncAction(Intent intent) {
         if(intent.getAction() == "sync done") startMapFragment();
@@ -89,20 +89,26 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         }
     }
 
-    private void startSearchActivity()
-    {
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!ServerSession.getInstance().isLoggedOn()) {
+            startLoginFragment();
+        }
+        else startMapFragment();
+    }
+
+    private void startSearchActivity() {
         Intent i = new Intent(this, SearchActivity.class);
         startActivity(i);
     }
 
-    private void startFilterActivity()
-    {
+    private void startFilterActivity() {
         Intent i = new Intent(this, FilterActivity.class);
         startActivity(i);
     }
 
-    private void startSettingsActivity()
-    {
+    private void startSettingsActivity() {
         Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
     }
@@ -114,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         login_fragment.setParent(this);
         fm.beginTransaction().replace(R.id.mainFrameLayout, login_fragment).commit();
     }
+
     private void startMapFragment() {
         enableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
@@ -121,29 +128,20 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         map_fragment.setParent(this);
         fm.beginTransaction().replace(R.id.mainFrameLayout, map_fragment).commit();
     }
+
     private void enableMenu() {
         menu_enabled = true;
         refreshMenu();
     }
+
     private void disableMenu() {
         menu_enabled = false;
         refreshMenu();
     }
+
     private void refreshMenu() {
         if (menu_search != null) menu_search.setVisible(menu_enabled);
         if (menu_filter != null) menu_filter.setVisible(menu_enabled);
         if (menu_settings != null) menu_settings.setVisible(menu_enabled);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!ServerSession.getInstance().isLoggedOn()) {
-            startLoginFragment();
-        }
-        else startMapFragment();
-    }
 }
-//TODO: Follow the milestones: https://docs.google.com/document/d/1YV0494viqVvGq67R5rodwnS0HrFsH4T2zdi6pd_rHmA/edit
-//TODO: Here's the specs: https://students.cs.byu.edu/~cs240ta/fall2016/projects/family-map/FamilyMapSpecification.pdf
-//TODO: Here's the course website: https://students.cs.byu.edu/~cs240ta/fall2016/projects/
-//TODO: Add Back Buttons

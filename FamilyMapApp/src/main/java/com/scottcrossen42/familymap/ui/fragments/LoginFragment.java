@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.scottcrossen42.familymap.Constants;
 import com.scottcrossen42.familymap.R;
 import com.scottcrossen42.familymap.httpaccess.GetRequest;
-import com.scottcrossen42.familymap.httpaccess.HTTPGetter;
-import com.scottcrossen42.familymap.httpaccess.HTTPPoster;
+import com.scottcrossen42.familymap.httpaccess.IHTTPGetter;
+import com.scottcrossen42.familymap.httpaccess.IHTTPPoster;
 import com.scottcrossen42.familymap.httpaccess.PostRequest;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
 import com.scottcrossen42.familymap.model.Filter;
@@ -29,7 +29,8 @@ import org.json.JSONObject;
  * @link http://scottcrossen42.com
  * Created on 12/1/16.
  */
-public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
+public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter {
+
     private EditText nameEditText;
     private EditText passwordEditText;
     private EditText hostEditText;
@@ -38,17 +39,14 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
     private Context context;
     private ServerSession session;
     private IFragmentCaller calling_object;
-    public LoginFragment() {
-        session = ServerSession.getInstance();
-    }
+
+    public LoginFragment() { session = ServerSession.getInstance(); }
+
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-    public void setParent(IFragmentCaller _calling_object){
-        calling_object=_calling_object;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,11 +66,13 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
         });
         return v;
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
     }
+
     private void onLoginClicked() {
         session.setUserName(nameEditText.getText().toString());
         session.setHost(hostEditText.getText().toString());
@@ -85,6 +85,7 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
         PostRequest task = new PostRequest(this, "/user/login", post_data);
         task.execute();
     }
+
     @Override
     public void HTTPError(Exception error) {
         Log.e(Constants.TAG, "Unable to login. " + error.getMessage());
@@ -95,6 +96,7 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
             calling_object.fragmentAction(this, intent);
         }
     }
+
     @Override
     public void txData(String result) {
         try {
@@ -110,6 +112,7 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
             HTTPError(e);
         }
     }
+
     @Override
     public void rxData(String result) {
         try {
@@ -125,4 +128,6 @@ public class LoginFragment extends Fragment implements HTTPPoster, HTTPGetter {
             HTTPError(e);
         }
     }
+
+    public void setParent(IFragmentCaller _calling_object){ calling_object=_calling_object; }
 }

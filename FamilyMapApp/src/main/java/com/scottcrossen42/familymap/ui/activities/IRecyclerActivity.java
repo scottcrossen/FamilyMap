@@ -6,5 +6,6 @@ package com.scottcrossen42.familymap.ui.activities;
  * Created on 12/5/16.
  */
 public interface IRecyclerActivity {
+
     public void onElementClicked(int parent_index, String id);
 }
