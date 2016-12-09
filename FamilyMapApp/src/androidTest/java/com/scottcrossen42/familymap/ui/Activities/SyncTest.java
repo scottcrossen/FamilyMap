@@ -1,4 +1,4 @@
-package com.scottcrossen42.familymap.model;
+package com.scottcrossen42.familymap.ui.Activities;
 
 import android.content.Intent;
 import android.util.Log;
@@ -7,6 +7,8 @@ import com.scottcrossen42.familymap.Constants;
 import com.scottcrossen42.familymap.httpaccess.IHTTPPoster;
 import com.scottcrossen42.familymap.httpaccess.PostRequest;
 import com.scottcrossen42.familymap.httpaccess.ServerSession;
+import com.scottcrossen42.familymap.model.Filter;
+import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.ui.activities.ITaskCaller;
 
 import junit.framework.TestCase;

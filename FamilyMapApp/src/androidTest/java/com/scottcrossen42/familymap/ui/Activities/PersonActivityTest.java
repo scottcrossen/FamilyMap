@@ -3,7 +3,6 @@ package com.scottcrossen42.familymap.ui.Activities;
 import com.scottcrossen42.familymap.model.Filter;
 import com.scottcrossen42.familymap.model.Model;
 import com.scottcrossen42.familymap.model.Person;
-import com.scottcrossen42.familymap.model.SyncTest;
 import com.scottcrossen42.familymap.ui.RecyclerView.PersonRecycler.PersonElement;
 import com.scottcrossen42.familymap.ui.activities.PersonActivity;
 

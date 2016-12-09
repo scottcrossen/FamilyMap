@@ -1,5 +1,7 @@
 package com.scottcrossen42.familymap.model;
 
+import com.scottcrossen42.familymap.ui.Activities.SyncTest;
+
 import junit.framework.TestCase;
 
 import java.util.Iterator;
