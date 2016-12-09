@@ -79,11 +79,13 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    // Generates the elements for the recycler:
     private ArrayList<Element> generateElements() {
         ArrayList<Element> to_return = new ArrayList<>();
         String search_term = search_input.getText().toString();
         if (search_term.length() > 0) {
             Iterator<Person> person_index = searchPeople(search_term).iterator();
+            // Iterates through the people and gets good people:
             while (person_index.hasNext()) {
                 Person person = person_index.next();
                 if (person.getGender().equals("Male"))
@@ -93,6 +95,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
                 else
                     to_return.add(new PersonElement(person.getFullName(), "", new IconDrawable(this, Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon), person.getID()));
             }
+            // Iterates through the events and gets good events:
             Iterator<Event> event_index = searchEvents(search_term).iterator();
             while (event_index.hasNext()) {
                 Event current_event = event_index.next();
@@ -102,6 +105,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
                         current_event.getID()));
             }
         }
+        // Return all correct words:
         return to_return;
     }
 
@@ -109,6 +113,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         Model model = Model.getInstance();
         List<Person> to_return = new LinkedList<>();
         Iterator<Person> index = model.getPeople().iterator();
+        // Iterates through the people in the model.
         while(index.hasNext()) {
             Person current_person = index.next();
             if (searchPerson(current_person, search_term))
@@ -121,6 +126,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
         Model model = Model.getInstance();
         List<Event> to_return = new LinkedList<>();
         Iterator<Event> index = model.getEvents().iterator();
+        // Iterates through the events in the model
         while(index.hasNext()) {
             Event current_event = index.next();
             if (searchEvent(current_event, search_term)) to_return.add(current_event);
@@ -133,6 +139,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
     }
 
     private boolean searchEvent(Event event, String search_term) {
+        // This is the main interfaces for searching the events:
         if (event.getCountry().indexOf(search_term) >= 0) return true;
         else if (event.getCity().indexOf(search_term) >= 0) return true;
         else if (event.getDescription().indexOf(search_term) >= 0) return true;
@@ -142,6 +149,7 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // I'm listening to eminem right now. Really good.
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -153,11 +161,13 @@ public class SearchActivity extends AppCompatActivity implements IRecyclerActivi
 
     @Override
     public void onElementClicked(int parent_index, String child_id) {
+        // This is required from the recycler:
         if (parent_index == 2) {
             Intent i = new Intent(this, PersonActivity.class);
             i.putExtra(Constants.PERSON_ACTIVITY_ARG_1, child_id);
             startActivity(i);
         }
+        // The first two indexes act differently
         else if (parent_index == 1) {
             Intent i = new Intent(this, MapActivity.class);
             i.putExtra(Constants.MAP_ACTIVITY_ARG_1, child_id);

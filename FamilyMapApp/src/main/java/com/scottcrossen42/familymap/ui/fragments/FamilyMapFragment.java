@@ -66,6 +66,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public static FamilyMapFragment newInstance() {
+        // Setup the fragment:
         FamilyMapFragment fragment = new FamilyMapFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -97,11 +98,13 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onResume() {
+        // Calls the super class.
         super.onResume();
         if (selected_event != null && !Model.getInstance().isEvent(selected_event.getID()))
             selected_event = null;
         FragmentManager fm = getFragmentManager();
         map_fragment = (SupportMapFragment) fm.findFragmentById(R.id.mapFrameLayout);
+        // Is the fragment existing? okay if not then:
         if (map_fragment == null || map == null) {
             map_fragment = SupportMapFragment.newInstance();
             fm.beginTransaction()
@@ -121,6 +124,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        // required to handle google maps.
         map = googleMap;
         setMarkers();
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -133,18 +137,22 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setMarkers() {
+        // First clear the current markers.
         map.clear();
         Model model = Model.getInstance();
         Filter filter = Filter.getInstance();
         Collection<Event> events = filter.filterEvents(model.getEvents());
         Iterator<Event> events_index = events.iterator();
+        // Iterate through and set the markers.
         while (events_index.hasNext()) {
             Event current_event = events_index.next();
+            // It's a long method call.
             map.addMarker(new MarkerOptions()
                     .title(current_event.getID())
                     .position(current_event.getCoordinates())
                     .icon(markerColor(current_event.getDescription())));
         }
+        // If its null then get a new one.
         if (selected_event != null) selectEvent();
         map.setMapType(Settings.getInstance().getMapBackground().getDisplayCode());
     }
@@ -158,6 +166,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private BitmapDescriptor markerColor(String event_description) {
+        // These are just a few events. Hopefully i got most of them.
         switch (event_description) {
             case "baptism":
                 return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
@@ -177,6 +186,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void markerSelected(Marker marker) {
+        // load the info about the marker.
         marker.hideInfoWindow();
         Model model = Model.getInstance();
         Event selected_event = model.getEvent(marker.getTitle());
@@ -219,6 +229,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
             gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_female).colorRes(R.color.FemaleIcon).sizeDp(50));
         else
             gender_image_view.setImageDrawable(new IconDrawable(getActivity(), Iconify.IconValue.fa_android).colorRes(R.color.AndroidIcon).sizeDp(50));
+        // Adds lines:
         addSpouseLine(selected_event);
         addPersonLine(selected_event);
         addTreeLines(selected_event);
@@ -235,6 +246,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
         if (settings.isSpouseLineEnabled()) {
             Event spouse_event = Model.getInstance().getSpouseEvent(selected_event.getPersonID());
             if (spouse_event != null) {
+                // The method call for adding a line is not clean:
                 spouse_line = map.addPolyline(new PolylineOptions()
                         .add(selected_event.getCoordinates(), spouse_event.getCoordinates())
                         .width(Constants.MAP_LINE_SIZE)
@@ -288,9 +300,11 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
             Settings settings = Settings.getInstance();
             Model model = Model.getInstance();
             Person child = model.getPerson(current_event.getPersonID());
+            // add tree lines.
             if (child.hasFather()) {
                 Event father_event = model.getFilteredEarliestEvent(child.getFather());
                 if (father_event != null) {
+                    // Another long method call:
                     tree_lines.add(map.addPolyline(new PolylineOptions()
                             .add(current_event.getCoordinates(), father_event.getCoordinates())
                             .width(width)
@@ -298,6 +312,7 @@ public class FamilyMapFragment extends Fragment implements OnMapReadyCallback {
                     addTreeLinesHelper(father_event, width - 1);
                 }
             }
+            // add tree lines.
             if (child.hasMother()) {
                 Event mother_event = model.getFilteredEarliestEvent(child.getMother());
                 if (mother_event != null) {

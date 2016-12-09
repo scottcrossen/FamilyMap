@@ -7,5 +7,6 @@ package com.scottcrossen42.familymap.ui.activities;
  */
 public interface IRecyclerActivity {
 
+    // Recyclers will call this event
     public void onElementClicked(int parent_index, String id);
 }

@@ -138,6 +138,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // required by the appcompatactivity.
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -153,6 +154,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
     }
 
     private void goToTop() {
+        // Menu option
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -160,6 +162,7 @@ public class SettingsActivity extends AppCompatActivity implements ITaskCaller {
 
     @Override
     public void syncAction(Intent intent) {
+        // This is the method to access the async task.
         if(intent.getAction() == "sync done") {
             Toast.makeText(this, "Sync Finished", Toast.LENGTH_LONG).show();
             goToTop();

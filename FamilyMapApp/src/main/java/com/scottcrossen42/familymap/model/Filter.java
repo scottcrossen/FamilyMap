@@ -30,14 +30,17 @@ public class Filter {
     boolean mother_checked = true;
     private Map<String, Boolean> is_checked;
 
+    // The Login Fragment will set the user:
     private Filter() {/*setUser(ServerSession.getInstance().getUserName());*/}
 
     public static Filter getInstance() { return ourInstance; }
 
+    // This will the main call to the class:
     public Collection<Event> filterEvents(Collection<Event> to_filter) {
         if (to_filter != null) {
             LinkedList<Event> to_return = new LinkedList<>();
             Iterator<Event> index = to_filter.iterator();
+            // Loop through the active filter of events and filter:
             while (index.hasNext()) {
                 Event current_event = index.next();
                 if (filterEvent(current_event)) to_return.add(current_event);
@@ -47,14 +50,17 @@ public class Filter {
         else return null;
     }
 
+    // This sets up the filters:
     public void enumerateFilters() {
         Model model = Model.getInstance();
         Iterator<Event> index = model.getEvents().iterator();
         is_checked = new TreeMap<>();
+        // The default behavior:
         showMales = false;
         showFemales = false;
         showFatherSide = false;
         showMotherSide = false;
+        // iterate through and check what static filters need to be shown:
         while(index.hasNext()) {
             Event event = index.next();
             if (!is_checked.containsKey(event.getDescription().toLowerCase()))
@@ -63,11 +69,13 @@ public class Filter {
             if (event_person.getGender().equals("Male")) showMales = true;
             if (event_person.getGender().equals("Female")) showFemales = true;
         }
+        // The person is stored in the model:
         Person user_person = model.getPerson(user);
         if(user_person !=null) {
-            if (user_person.hasFather()) showFatherSide = true;
+            if (user_person.hasFather()) showFatherSide = true; // Only show sides if person exists:
             if (user_person.hasMother()) showMotherSide = true;
         }
+        // Sometimes the user isn't. We'll just create one instead of throwing an error.
         else{
             if (user==null)
                 user_person=new Person(ServerSession.getInstance().getUserName(),"","","trans");
@@ -78,6 +86,7 @@ public class Filter {
         }
     }
 
+    // Each event in the iteration goes through this:
     private boolean filterEvent(Event event) {
         if (!is_checked.get(event.getDescription().toLowerCase())) return false;
         else if (!father_checked && isDescendant(model.getPerson(user).getFather(), event.getPersonID())) return false;
@@ -87,6 +96,7 @@ public class Filter {
         else return true;
     }
 
+    // This is for the family-side filter:
     private boolean isDescendant(String current, String to_find) {
         if (current != null) {
             if (current.equals(to_find)) return true;
@@ -99,6 +109,7 @@ public class Filter {
         else return false;
     }
 
+    // Which filters are active? is this one?
     public boolean isChecked(Type parent, String description) {
         switch (parent) {
             case DESCRIPTION:
@@ -117,6 +128,7 @@ public class Filter {
         }
     }
 
+    // Set the filters
     public void setChecked(Type parent, String id, boolean checked) {
         switch (parent) {
             case DESCRIPTION:
@@ -140,6 +152,7 @@ public class Filter {
         }
     }
 
+    // One-liners:
     public void setUser(String user) { this.user = user; }
     public String getUser() { return user; }
     public Set<String> getFilters() { return is_checked.keySet(); }

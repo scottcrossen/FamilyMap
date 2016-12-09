@@ -7,7 +7,9 @@ package com.scottcrossen42.familymap.httpaccess;
  */
 public interface IHTTPGetter {
 
+    // What happens when the post gets received?
     public void rxData(String data);
 
+    // What happens when an Error gets received?
     public void HTTPError(Exception error);
 }

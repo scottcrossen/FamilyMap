@@ -43,6 +43,7 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
     public LoginFragment() { session = ServerSession.getInstance(); }
 
     public static LoginFragment newInstance() {
+        // Setups the fragment.
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -53,6 +54,7 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
+        // Setup the layout.
         login_button = (Button)v.findViewById(R.id.login_button);
         nameEditText = (EditText)v.findViewById(R.id.nameEditText);
         passwordEditText = (EditText)v.findViewById(R.id.passwordEditText);
@@ -73,6 +75,7 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
         this.context = context;
     }
 
+    // What to do when credentials are set.
     private void onLoginClicked() {
         session.setUserName(nameEditText.getText().toString());
         session.setHost(hostEditText.getText().toString());
@@ -86,10 +89,12 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
         task.execute();
     }
 
+    // We're implenting some interfaces that have methods to override.
     @Override
     public void HTTPError(Exception error) {
         Log.e(Constants.TAG, "Unable to login. " + error.getMessage());
         Toast.makeText(context, "ERROR: unable to login.", Toast.LENGTH_LONG).show();
+        // Calls the main activity hopefully.
         if (calling_object != null) {
             Intent intent = new Intent();
             intent.setAction("login failed");
@@ -97,16 +102,19 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
         }
     }
 
+    // This happens when the post request comes back.
     @Override
     public void txData(String result) {
         try {
             JSONObject json_obj = new JSONObject(result);
+            // Lets try creating a server session:
             String person_id = json_obj.getString("personId");
             session.setAuth(json_obj.getString("Authorization"));
             Filter.getInstance().setUser(person_id);
             GetRequest task = new GetRequest(this, "/person/" + person_id);
             task.execute();
         }
+        // A exception could be thrown:
         catch(org.json.JSONException e) {
             Log.e(Constants.TAG, "Corrupt data received: " + result);
             HTTPError(e);
@@ -119,11 +127,14 @@ public class LoginFragment extends Fragment implements IHTTPPoster, IHTTPGetter 
             JSONObject json_obj = new JSONObject(result);
             Toast.makeText(context, "welcome " + json_obj.getString("firstName") + " " + json_obj.getString("lastName"), Toast.LENGTH_LONG).show();
             if (calling_object != null) {
+                // Tries calling the main activity:
                 Intent intent = new Intent();
                 intent.setAction("fragment finished");
                 calling_object.fragmentAction(this, intent);
             }
-        } catch(org.json.JSONException e) {
+        }
+        // The JSON may catch an error.
+        catch(org.json.JSONException e) {
             Log.e(Constants.TAG, "Corrupt data received: " + result);
             HTTPError(e);
         }

@@ -10,5 +10,6 @@ import android.support.v4.app.Fragment;
  */
 public interface ITaskCaller {
 
+    // Async Tasks and classes that refer to the model will refer to this event
     public abstract void syncAction(Intent intent);
 }

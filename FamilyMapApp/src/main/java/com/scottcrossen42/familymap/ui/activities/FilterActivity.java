@@ -39,35 +39,36 @@ public class FilterActivity extends AppCompatActivity {
         ArrayList<FilterElement> to_return = new ArrayList<>();
         Filter filter = Filter.getInstance();
         Iterator<String> index = filter.getFilters().iterator();
+        // Iterate through and check filters:
         while(index.hasNext()) {
             String description = index.next();
             to_return.add(new FilterElement(description, filter.isChecked(Filter.Type.DESCRIPTION, description), Filter.Type.DESCRIPTION));
         }
-        if (filter.showFatherSide()) {
+        // Which filters should be shown?
+        if (filter.showFatherSide())
             to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FATHER_SIDE, null), Filter.Type.FATHER_SIDE));
-        }
-        if (filter.showMotherSide()) {
+        if (filter.showMotherSide())
             to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MOTHER_SIDE, null), Filter.Type.MOTHER_SIDE));
-        }
-        if (filter.showMales()) {
+        if (filter.showMales())
             to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.MALE_GENDER, null), Filter.Type.MALE_GENDER));
-        }
-        if (filter.showFemales()) {
+        if (filter.showFemales())
             to_return.add(new FilterElement(null, filter.isChecked(Filter.Type.FEMALE_GENDER, null), Filter.Type.FEMALE_GENDER));
-        }
         return to_return;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Calls the super calss:
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+        // Setups recycler:
         RecyclerView list_view = (RecyclerView) findViewById(R.id.filterRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         list_view.setLayoutManager(manager);
         FilterAdapter adapter = new FilterAdapter(this, generateElements());
         list_view.setAdapter(adapter);
+        // Misc setup:
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -75,7 +76,7 @@ public class FilterActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                finish(); // This activity is finished.
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

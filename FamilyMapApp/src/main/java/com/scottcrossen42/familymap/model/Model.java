@@ -49,6 +49,7 @@ public class Model implements IHTTPGetter {
         else importPerson(to_import);
     }
 
+    // The basic form of an event:
     private void importEvent(JSONObject to_import) throws org.json.JSONException {
         Event event = new Event(
                 to_import.getString("eventID"),
@@ -62,6 +63,7 @@ public class Model implements IHTTPGetter {
         addEvent(event);
     }
 
+    // The basic form of a person:
     private void importPerson(JSONObject to_import) throws org.json.JSONException {
         Person person = new Person(
                 to_import.getString("personID"),
@@ -74,6 +76,7 @@ public class Model implements IHTTPGetter {
         addPerson(person);
     }
 
+    // Clear the model:
     private void clear() {
         people = new HashMap();
         events = new HashMap();
@@ -81,6 +84,7 @@ public class Model implements IHTTPGetter {
         persons_received = false;
     }
 
+    // What to do when data is recieved:
     @Override
     public void rxData(String result) {
         try {
@@ -109,6 +113,7 @@ public class Model implements IHTTPGetter {
         }
     }
 
+    // What to do with errors:
     @Override
     public void HTTPError(Exception error) {
         if (calling_object != null) {
@@ -119,6 +124,7 @@ public class Model implements IHTTPGetter {
         }
     }
 
+    // Method to add an event after JSON is parsed:
     public void addEvent(Event event) {
         String person_id = event.getPersonID();
         if (people.containsKey(person_id))
@@ -129,8 +135,10 @@ public class Model implements IHTTPGetter {
         person_events.get(event.getPersonID()).add(event.getID());
     }
 
+    // Method to add a person after JSON is parsed:
     public void addPerson(Person person) { people.put(person.getID(), person); }
 
+    // Getter for the list of events for a person:
     public Collection<Event> getPersonEvents(String person_id) {
         if (person_events.get(person_id) != null) {
             Set<Event> to_return = new TreeSet<>();
@@ -141,21 +149,25 @@ public class Model implements IHTTPGetter {
         else return null;
     }
 
+    // Event getter that refers to a spouse:
     public Event getSpouseEvent(String person_id) {
         String spouse_id = people.get(person_id).getSpouse();
         return getFilteredEarliestEvent(spouse_id);
     }
 
+    // Event getter that refers to a time:
     public Event getFilteredEarliestEvent(String person_id) {
         Collection<Event> person_events = getFilteredPersonEvents(person_id);
         return getEarliestEvent(person_events);
     }
 
+    // Event getter that refers to a time:
     public Event getEarliestEvent(String person_id) {
         Collection<Event> person_events = getPersonEvents(person_id);
         return getEarliestEvent(person_events);
     }
 
+    // Event getter that refers to a time:
     private Event getEarliestEvent(Collection<Event> person_events) {
         if (person_events != null) {
             if (person_events.size() > 0)
@@ -166,6 +178,7 @@ public class Model implements IHTTPGetter {
             return null;
     }
 
+    // Man the guy next to me has bad breath
     public boolean isEvent(String id) { return events.containsKey(id); }
     public Person getPerson(String id) { return people.get(id); }
     public Event getEvent(String id) { return events.get(id); }

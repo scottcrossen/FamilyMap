@@ -32,29 +32,36 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Super-class the create method:
         super.onCreate(savedInstanceState);
+        //Setup the layout:
         setContentView(R.layout.activity_main);
         FragmentManager fm = this.getSupportFragmentManager();
         LoginFragment login_fragment = (LoginFragment) fm.findFragmentById(R.id.mainFrameLayout);
+        // Should I start the layout?
         if (login_fragment == null) startLoginFragment();
+        //Default behavior
         menu_enabled = false;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // What the menu looks like and all the icons:
         menu_search = menu.findItem(R.id.main_menu_search).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_search).colorRes(R.color.MenuIcons).sizeDp(20));
         menu_filter = menu.findItem(R.id.main_menu_filter).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_filter).colorRes(R.color.MenuIcons).sizeDp(20));
         menu_settings = menu.findItem(R.id.main_menu_settings).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_gear).colorRes(R.color.MenuIcons).sizeDp(20));
+        // Refresh this business:
         refreshMenu();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // This class calls the recycler. This needs to be implemented:
         switch (item.getItemId()) {
             case R.id.main_menu_search:
                 startSearchActivity();
@@ -72,7 +79,14 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
 
     @Override
     public void fragmentAction(android.support.v4.app.Fragment fragment, Intent fragmentIntent) {
+        // If the fragment is a login fragment then we can start the next fragment.
         if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "fragment finished") Model.getInstance().syncData(this);
+        // What if the fragment encounters an error?
+        if(fragment.getClass()==LoginFragment.class && fragmentIntent.getAction() == "http error") {
+            Log.e(Constants.TAG, "Unable to retrieve data. " + fragmentIntent.getStringExtra("error"));
+            Toast.makeText(this, "ERROR: unable to retrieve data.", Toast.LENGTH_LONG).show();
+        }
+        // This method is depricated but I might as well keep it here:
         if(fragment.getClass()==FamilyMapFragment.class && fragmentIntent.getAction() == "event selected") {
             Intent i = new Intent(this, MapActivity.class);
             i.putExtra(Constants.MAP_ACTIVITY_ARG_1, fragmentIntent.getStringExtra("target event id"));
@@ -91,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
 
     @Override
     public void onResume() {
+        // When this activity is called back:
         super.onResume();
         if (!ServerSession.getInstance().isLoggedOn()) {
             startLoginFragment();
@@ -98,22 +113,22 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         else startMapFragment();
     }
 
-    private void startSearchActivity() {
+    private void startSearchActivity() { // This method is good to have but I don't use it.
         Intent i = new Intent(this, SearchActivity.class);
         startActivity(i);
     }
 
-    private void startFilterActivity() {
+    private void startFilterActivity() { // This method is good to have but I don't use it.
         Intent i = new Intent(this, FilterActivity.class);
         startActivity(i);
     }
 
-    private void startSettingsActivity() {
+    private void startSettingsActivity() { // This method is good to have but I don't use it.
         Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
     }
 
-    private void startLoginFragment() {
+    private void startLoginFragment() { // This starts the login portion.
         disableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
         LoginFragment login_fragment = LoginFragment.newInstance();
@@ -121,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         fm.beginTransaction().replace(R.id.mainFrameLayout, login_fragment).commit();
     }
 
-    private void startMapFragment() {
+    private void startMapFragment() { // This starts the actual map.
         enableMenu();
         FragmentManager fm = this.getSupportFragmentManager();
         FamilyMapFragment map_fragment = FamilyMapFragment.newInstance();
@@ -129,17 +144,17 @@ public class MainActivity extends AppCompatActivity implements IFragmentCaller, 
         fm.beginTransaction().replace(R.id.mainFrameLayout, map_fragment).commit();
     }
 
-    private void enableMenu() {
+    private void enableMenu() { // Enables menu
         menu_enabled = true;
         refreshMenu();
     }
 
-    private void disableMenu() {
+    private void disableMenu() { // Disables Menu
         menu_enabled = false;
         refreshMenu();
     }
 
-    private void refreshMenu() {
+    private void refreshMenu() { // Refreshes menu. Duh.
         if (menu_search != null) menu_search.setVisible(menu_enabled);
         if (menu_filter != null) menu_filter.setVisible(menu_enabled);
         if (menu_settings != null) menu_settings.setVisible(menu_enabled);

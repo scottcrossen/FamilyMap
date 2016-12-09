@@ -9,5 +9,6 @@ public interface IHTTPPoster {
 
     public void txData(String result);
 
+    // What happens when an Error gets received?
     public void HTTPError(Exception error);
 }

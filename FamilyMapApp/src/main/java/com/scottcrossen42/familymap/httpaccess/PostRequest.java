@@ -20,6 +20,7 @@ public class PostRequest extends AsyncTask<Void, Void, String> {
     private String handle;
     private Exception error;
 
+    // Constructor
     public PostRequest(IHTTPPoster _who_called_me, String _handle, String _post_data) {
         super();
         who_called_me = _who_called_me;

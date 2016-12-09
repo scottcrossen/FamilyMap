@@ -9,6 +9,7 @@ public class BadConnectionException extends Exception {
 
     private int response_code;
 
+    //This Exception will be thrown when a bad connection is encountered.
     public BadConnectionException(int _response_code) {
         super();
         response_code = _response_code;

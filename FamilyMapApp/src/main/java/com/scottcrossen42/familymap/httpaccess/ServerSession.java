@@ -8,6 +8,8 @@ import java.net.URL;
  * Created on 12/1/16.
  */
 public class ServerSession{
+
+    //Mainly just the variable set for the connection.
     private static ServerSession session = new ServerSession();
     private String name;
     private String host;

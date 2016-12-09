@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Event implements Comparable {
 
+    // Lots of possible fields:
     private String id;
     private String person_id;
     private String person_name = "Unnamed";
@@ -18,6 +19,7 @@ public class Event implements Comparable {
     private String description;
     private int year;
 
+    // Constructor:
     public Event(String eventID, String personID, double latitude, double longitude, String country, String city, String description, int year) {
         this.id = eventID;
         this.person_id = personID;

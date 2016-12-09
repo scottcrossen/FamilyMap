@@ -11,5 +11,6 @@ import android.support.v4.app.Fragment;
  */
 public interface IFragmentCaller {
 
+    // Fragments will call this event
     public abstract void fragmentAction(Fragment fragment, Intent fragmentIntent);
 }

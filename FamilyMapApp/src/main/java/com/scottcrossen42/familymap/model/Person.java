@@ -15,6 +15,7 @@ public class Person {
     private String father;
     private String mother;
 
+    // Constructor:
     public Person(String personID, String firstName, String lastName, String gender) {
         id = personID;
         first_name = firstName;
@@ -22,6 +23,7 @@ public class Person {
         this.gender = gender;
     }
 
+    // What about transgender? Too bad. I won't handle that here.
     public String getGender() {
         if (gender.equals("f")) return "Female";
         else if (gender.equals("m")) return "Male";

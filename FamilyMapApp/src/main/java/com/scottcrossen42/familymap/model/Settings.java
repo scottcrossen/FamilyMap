@@ -10,6 +10,8 @@ import com.google.android.gms.maps.GoogleMap;
  * Created on 12/1/16.
  */
 public class Settings {
+
+    // Here's the majority of fields for the settings:
     private LineColor LifeLineColor = LineColor.GREEN;
     private LineColor FamilyTreeColor = LineColor.BLUE;
     private LineColor SpouseLineColor = LineColor.RED;
@@ -21,6 +23,7 @@ public class Settings {
 
     private Settings() {}
 
+    // Lets create a custom variable type to use:
     public enum LineColor {
             BLACK("Black", Color.BLACK),
             GRAY("Gray", Color.GRAY),
@@ -43,6 +46,7 @@ public class Settings {
         public String toString() { return friendly_name; }
     }
 
+    // Lets create a custom variable type to use:
     public enum MapBackground{
             NORMAL("Normal", GoogleMap.MAP_TYPE_NORMAL),
             HYBRID("Hybrid", GoogleMap.MAP_TYPE_HYBRID),
@@ -60,6 +64,7 @@ public class Settings {
         public String toString() { return friendly_name; }
     }
 
+    // Lots of Getters and Setters:
     public static Settings getInstance() { return ourInstance; }
     public LineColor getLifeLineColor() { return LifeLineColor; }
     public void setLifeLineColor(LineColor lifeLineColor) { LifeLineColor = lifeLineColor; }
